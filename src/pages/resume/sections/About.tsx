@@ -331,7 +331,7 @@ const About: React.FC = () => {
               
               <DownloadButtons>
                 <DownloadButton
-                  href="/김태성_이력서_경력기술서_250918.pdf"
+                  href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서_250918.pdf`}
                   download="김태성_이력서_경력기술서.pdf"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -347,7 +347,7 @@ const About: React.FC = () => {
                 </DownloadButton>
                 
                 <DownloadButton
-                  href="/프로젝트 포트폴리오_김태성.pdf"
+                  href={`${process.env.PUBLIC_URL}/프로젝트 포트폴리오_김태성.pdf`}
                   download="김태성_실무포트폴리오.pdf"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}

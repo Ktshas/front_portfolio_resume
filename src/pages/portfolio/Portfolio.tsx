@@ -59,7 +59,7 @@ const Portfolio: React.FC = () => {
           </BackLink>
           <PDFContainer>
             <PDFViewer 
-              pdfUrl="/프로젝트 포트폴리오_김태성.pdf"
+              pdfUrl={`${process.env.PUBLIC_URL}/프로젝트 포트폴리오_김태성.pdf`}
               fileName="프로젝트 포트폴리오_김태성.pdf"
             />
           </PDFContainer>
