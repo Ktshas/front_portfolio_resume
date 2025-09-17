@@ -9,7 +9,7 @@ import Contact from './pages/contact/Contact';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/front_portfolio_resume">
       <div className="App">
         <Routes>
           <Route path="/" element={<Navigate to="/resume" replace />} />
