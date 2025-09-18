@@ -201,7 +201,7 @@ const GlobalHeader: React.FC = () => {
 
           <SocialLinks>
             <SocialLink
-              href="https://github.com"
+              href="https://github.com/Ktshas/front_portfolio_resume"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}
@@ -259,7 +259,7 @@ const GlobalHeader: React.FC = () => {
           ))}
           <MobileSocialLinks>
             <SocialLink
-              href="https://github.com"
+              href="https://github.com/Ktshas/front_portfolio_resume"
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.1 }}

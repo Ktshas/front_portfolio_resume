@@ -51,7 +51,6 @@ portfolio-project/
 │       │       ├── About.tsx        # 소개 섹션
 │       │       ├── Experience.tsx   # 경력 섹션
 │       │       ├── Skills.tsx       # 기술 스택 섹션
-│       │       ├── Projects.tsx     # 프로젝트 섹션
 │       │       └── Footer.tsx       # 푸터 섹션
 │       ├── portfolio/               # 포트폴리오 페이지
 │       │   ├── Portfolio.tsx        # 포트폴리오 메인 페이지
@@ -96,7 +95,7 @@ portfolio-project/
 
 ### `src/pages/resume/sections/`
 - 이력서의 각 섹션을 담당하는 컴포넌트들
-- Hero, About, Experience, Skills, Projects, Footer로 구성
+- Hero, About, Experience, Skills, Footer로 구성
 
 ## 🚀 개발 명령어
 

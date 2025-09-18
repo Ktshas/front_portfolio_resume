@@ -237,12 +237,12 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.8 }}
           >
             <PrimaryButton
-              href="#projects"
+              href="#skills"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <ExternalLink size={18} />
-              프로젝트 보기
+              기술 스택 보기
             </PrimaryButton>
             <SecondaryButton
               href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서_250918.pdf`}
