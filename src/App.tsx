@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/resume" replace />} />
           <Route path="/resume" element={<Resume />} />
-          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/portfolio/*" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
