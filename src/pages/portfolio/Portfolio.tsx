@@ -5,6 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import PortfolioMain from './PortfolioMain';
 import WorkPortfolio from './WorkPortfolio';
 import RunningSchedule from './RunningSchedule';
+import ScheduleDetail from './ScheduleDetail';
 
 const Portfolio: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const Portfolio: React.FC = () => {
       <Route index element={<PortfolioMain />} />
       <Route path="work" element={<WorkPortfolio />} />
       <Route path="running" element={<RunningSchedule />} />
+      <Route path="running/schedule/:scheduleId" element={<ScheduleDetail />} />
     </Routes>
   );
 };

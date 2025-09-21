@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
-import { Link } from 'react-router-dom';
 import { theme } from '../../theme';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../components/shared/GlobalHeader';
+import PortfolioNavigation from '../../components/shared/PortfolioNavigation';
 import PDFViewer from '../../components/ui/PDFViewer';
 
 const PortfolioContainer = styled.div`
@@ -31,52 +31,15 @@ const PDFContainer = styled.div`
   margin: 0 auto;
 `;
 
-const NavigationContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-`;
-
-const NavButton = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: ${props => props.theme.gradients.primary};
-  color: white;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: transform 0.3s ease;
-  white-space: nowrap;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &.secondary {
-    background: ${props => props.theme.colors.surface};
-    color: ${props => props.theme.colors.text};
-    border: 1px solid ${props => props.theme.colors.border};
-  }
-`;
 
 const WorkPortfolio: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>
         <GlobalHeader />
+        <PortfolioNavigation />
         <PortfolioContainer>
           <PortfolioTitle>실무 포트폴리오</PortfolioTitle>
-          <NavigationContainer>
-            <NavButton to="/portfolio">
-              ← 포트폴리오 메인
-            </NavButton>
-            <NavButton to="/portfolio/running" className="secondary">
-              러닝 스케줄 날씨 알림 →
-            </NavButton>
-          </NavigationContainer>
           <PDFContainer>
             <PDFViewer 
               pdfUrl={`${process.env.PUBLIC_URL}/프로젝트 포트폴리오_김태성.pdf`}

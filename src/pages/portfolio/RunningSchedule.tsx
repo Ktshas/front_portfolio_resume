@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { theme } from '../../theme';
-import { Calendar, Cloud, Activity } from 'lucide-react';
+import { RunningSchedule as RunningScheduleType, ScheduleFormData } from '../../types/schedule';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../components/shared/GlobalHeader';
+import PortfolioNavigation from '../../components/shared/PortfolioNavigation';
+import Calendar from '../../components/ui/Calendar';
+import ScheduleForm from '../../components/ui/ScheduleForm';
+import UpcomingSchedule from '../../components/ui/UpcomingSchedule';
 
 const PortfolioContainer = styled.div`
   min-height: 100vh;
@@ -31,36 +36,6 @@ const ContentContainer = styled.div`
   margin: 0 auto;
 `;
 
-const NavigationContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-`;
-
-const NavButton = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: ${props => props.theme.gradients.primary};
-  color: white;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: transform 0.3s ease;
-  white-space: nowrap;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &.secondary {
-    background: ${props => props.theme.colors.surface};
-    color: ${props => props.theme.colors.text};
-    border: 1px solid ${props => props.theme.colors.border};
-  }
-`;
 
 const ComingSoonCard = styled.div`
   background: ${props => props.theme.colors.surface};
@@ -128,63 +103,79 @@ const FeatureText = styled.div`
 `;
 
 const RunningSchedule: React.FC = () => {
-  const features = [
-    {
-      icon: <Calendar size={20} />,
-      title: '일정 관리',
-      description: '러닝 계획을 체계적으로 관리'
-    },
-    {
-      icon: <Cloud size={20} />,
-      title: '날씨 정보',
-      description: '기상청 API로 실시간 날씨 확인'
-    },
-    {
-      icon: <Activity size={20} />,
-      title: '운동 기록',
-      description: '러닝 활동 데이터 추적'
+  const navigate = useNavigate();
+  const [schedules, setSchedules] = useState<RunningScheduleType[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  // 로컬스토리지에서 스케줄 데이터 로드
+  useEffect(() => {
+    const savedSchedules = localStorage.getItem('runningSchedules');
+    if (savedSchedules) {
+      setSchedules(JSON.parse(savedSchedules));
     }
-  ];
+  }, []);
+
+  // 스케줄 데이터를 로컬스토리지에 저장
+  const saveSchedules = (newSchedules: RunningScheduleType[]) => {
+    setSchedules(newSchedules);
+    localStorage.setItem('runningSchedules', JSON.stringify(newSchedules));
+  };
+
+  // 날짜 선택 핸들러
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+    setIsFormOpen(true);
+  };
+
+  // 스케줄 등록 핸들러
+  const handleScheduleSubmit = (formData: ScheduleFormData) => {
+    const newSchedule: RunningScheduleType = {
+      id: Date.now().toString(),
+      ...formData,
+      date: selectedDate,
+      createdAt: new Date().toISOString()
+    };
+
+    const newSchedules = [...schedules, newSchedule];
+    saveSchedules(newSchedules);
+    setIsFormOpen(false);
+  };
+
+  // 스케줄 클릭 핸들러 (상세 페이지로 이동)
+  const handleScheduleClick = (schedule: RunningScheduleType) => {
+    navigate(`/portfolio/running/schedule/${schedule.id}`, { state: { schedule } });
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <div>
         <GlobalHeader />
+        <PortfolioNavigation />
         <PortfolioContainer>
-          <PortfolioTitle>러닝 스케줄 관리</PortfolioTitle>
+          <PortfolioTitle>러닝 스케줄 날씨 알림</PortfolioTitle>
           
-          <NavigationContainer>
-            <NavButton to="/portfolio">
-              ← 포트폴리오 메인
-            </NavButton>
-            <NavButton to="/portfolio/work" className="secondary">
-              실무 포트폴리오 →
-            </NavButton>
-          </NavigationContainer>
 
           <ContentContainer>
-            <ComingSoonCard>
-              <ComingSoonTitle>🏃‍♂️ 곧 공개 예정입니다!</ComingSoonTitle>
-              <ComingSoonDescription>
-                기상청 API를 활용한 스마트 러닝 스케줄 관리 시스템을 개발 중입니다.
-                날씨 정보를 기반으로 최적의 러닝 일정을 추천하고 관리할 수 있는 기능을 제공할 예정입니다.
-              </ComingSoonDescription>
-              
-              <FeatureList>
-                {features.map((feature, index) => (
-                  <FeatureItem key={index}>
-                    <FeatureIcon>
-                      {feature.icon}
-                    </FeatureIcon>
-                    <FeatureText>
-                      <h4>{feature.title}</h4>
-                      <p>{feature.description}</p>
-                    </FeatureText>
-                  </FeatureItem>
-                ))}
-              </FeatureList>
-            </ComingSoonCard>
+            <UpcomingSchedule schedules={schedules} />
+            <Calendar
+              schedules={schedules}
+              onDateSelect={handleDateSelect}
+              onScheduleClick={handleScheduleClick}
+              selectedDate={selectedDate}
+            />
           </ContentContainer>
+
+          <AnimatePresence>
+            {isFormOpen && (
+              <ScheduleForm
+                isOpen={isFormOpen}
+                onClose={() => setIsFormOpen(false)}
+                onSubmit={handleScheduleSubmit}
+                selectedDate={selectedDate}
+              />
+            )}
+          </AnimatePresence>
         </PortfolioContainer>
       </div>
     </ThemeProvider>

@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { theme } from '../../theme';
-import { FileText, Calendar, Activity } from 'lucide-react';
+import { FileText, Activity } from 'lucide-react';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../components/shared/GlobalHeader';
@@ -105,21 +105,6 @@ const Tag = styled.span`
   font-weight: 500;
 `;
 
-const BackLink = styled(Link)`
-  display: inline-block;
-  margin-bottom: 2rem;
-  padding: 0.75rem 1.5rem;
-  background: ${props => props.theme.gradients.primary};
-  color: white;
-  text-decoration: none;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-`;
 
 const PortfolioMain: React.FC = () => {
   const portfolioSections = [
@@ -148,9 +133,6 @@ const PortfolioMain: React.FC = () => {
         <PortfolioContainer>
           <PortfolioTitle>프로젝트 포트폴리오</PortfolioTitle>
           
-          <BackLink to="/resume">
-            ← 이력서 보기
-          </BackLink>
 
           <SectionsContainer>
             {portfolioSections.map((section, index) => (
