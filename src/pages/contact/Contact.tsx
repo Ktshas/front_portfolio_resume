@@ -110,12 +110,6 @@ const Contact: React.FC = () => {
       href: 'mailto:ktshas@naver.com'
     },
     {
-      icon: <Phone size={20} />,
-      label: 'Phone',
-      value: '010-8467-1344',
-      href: 'tel:01084671344'
-    },
-    {
       icon: <MapPin size={20} />,
       label: 'Location',
       value: '서울 송파구 거주\n근무 가능 지역 서울, 성남',
