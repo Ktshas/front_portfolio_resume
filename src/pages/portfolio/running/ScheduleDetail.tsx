@@ -10,16 +10,16 @@ import {
   Trash2,
   Edit
 } from 'lucide-react';
-import { theme } from '../../theme';
-import { RunningSchedule, WeatherInfo } from '../../types/schedule';
+import { theme } from '../../../theme';
+import { RunningSchedule, WeatherInfo } from '../../../types/schedule';
 import { 
   generateMockWeatherData, 
   getRunningCondition 
-} from '../../data/mockWeatherData';
+} from '../../../data/mockWeatherData';
 
 // 공통 컴포넌트들 import
-import GlobalHeader from '../../components/shared/GlobalHeader';
-import PortfolioNavigation from '../../components/shared/PortfolioNavigation';
+import GlobalHeader from '../../../components/shared/GlobalHeader';
+import PortfolioNavigation from '../../../components/shared/PortfolioNavigation';
 import WeatherCard from './components/WeatherCard';
 
 const PortfolioContainer = styled.div`

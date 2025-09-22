@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 import { RunningSchedule } from '../../types/schedule';
 import { getWeatherForTime } from '../../data/mockWeatherData';
-import WeatherCard from '../../pages/portfolio/components/WeatherCard';
+import WeatherCard from '../../pages/portfolio/running/components/WeatherCard';
 
 interface UpcomingScheduleProps {
   schedules: RunningSchedule[];

@@ -3,15 +3,15 @@ import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
-import { theme } from '../../theme';
-import { RunningSchedule as RunningScheduleType, ScheduleFormData } from '../../types/schedule';
+import { theme } from '../../../theme';
+import { RunningSchedule as RunningScheduleType, ScheduleFormData } from '../../../types/schedule';
 
 // 공통 컴포넌트들 import
-import GlobalHeader from '../../components/shared/GlobalHeader';
-import PortfolioNavigation from '../../components/shared/PortfolioNavigation';
-import Calendar from '../../components/ui/Calendar';
-import ScheduleForm from '../../components/ui/ScheduleForm';
-import UpcomingSchedule from '../../components/ui/UpcomingSchedule';
+import GlobalHeader from '../../../components/shared/GlobalHeader';
+import PortfolioNavigation from '../../../components/shared/PortfolioNavigation';
+import Calendar from '../../../components/ui/Calendar';
+import ScheduleForm from '../../../components/ui/ScheduleForm';
+import UpcomingSchedule from '../../../components/ui/UpcomingSchedule';
 
 const PortfolioContainer = styled.div`
   min-height: 100vh;

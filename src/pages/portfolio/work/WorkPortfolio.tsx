@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
-import { theme } from '../../theme';
+import { theme } from '../../../theme';
 
 // 공통 컴포넌트들 import
-import GlobalHeader from '../../components/shared/GlobalHeader';
-import PortfolioNavigation from '../../components/shared/PortfolioNavigation';
-import PDFViewer from '../../components/ui/PDFViewer';
+import GlobalHeader from '../../../components/shared/GlobalHeader';
+import PortfolioNavigation from '../../../components/shared/PortfolioNavigation';
+import PDFViewer from '../../../components/ui/PDFViewer';
 
 const PortfolioContainer = styled.div`
   min-height: 100vh;

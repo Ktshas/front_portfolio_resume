@@ -3,9 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 
 // 포트폴리오 하위 페이지들 import
 import PortfolioMain from './PortfolioMain';
-import WorkPortfolio from './WorkPortfolio';
-import RunningSchedule from './RunningSchedule';
-import ScheduleDetail from './ScheduleDetail';
+import WorkPortfolio from './work/WorkPortfolio';
+import RunningSchedule from './running/RunningSchedule';
+import ScheduleDetail from './running/ScheduleDetail';
 
 const Portfolio: React.FC = () => {
   return (

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Droplets, Wind } from 'lucide-react';
-import { WeatherInfo } from '../../../types/schedule';
-import { getWeatherEmoji } from '../../../data/mockWeatherData';
+import { WeatherInfo } from '../../../../types/schedule';
+import { getWeatherEmoji } from '../../../../data/mockWeatherData';
 
 interface WeatherCardProps {
   weather: WeatherInfo;
