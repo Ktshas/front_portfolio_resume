@@ -111,12 +111,17 @@ const DaysUntil = styled.div`
 const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
   const getUpcomingSchedule = (): RunningSchedule | null => {
     const today = new Date();
+    // 오늘 날짜를 00:00:00으로 설정하여 날짜만 비교
+    today.setHours(0, 0, 0, 0);
+    
     const oneWeekLater = new Date();
     oneWeekLater.setDate(today.getDate() + 7);
+    oneWeekLater.setHours(23, 59, 59, 999);
 
     // 오늘부터 1주일 이내의 스케줄만 필터링
     const upcomingSchedules = schedules.filter(schedule => {
       const scheduleDate = new Date(schedule.date);
+      scheduleDate.setHours(0, 0, 0, 0); // 시간 정보 제거하여 날짜만 비교
       return scheduleDate >= today && scheduleDate <= oneWeekLater;
     });
 
@@ -153,12 +158,17 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
 
   const getDaysUntil = (dateStr: string): string => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // 오늘 날짜를 00:00:00으로 설정
+    
     const scheduleDate = new Date(dateStr);
+    scheduleDate.setHours(0, 0, 0, 0); // 스케줄 날짜도 00:00:00으로 설정
+    
     const diffTime = scheduleDate.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays === 0) return '오늘';
     if (diffDays === 1) return '내일';
+    if (diffDays === 2) return '모레';
     return `D-${diffDays}`;
   };
 
