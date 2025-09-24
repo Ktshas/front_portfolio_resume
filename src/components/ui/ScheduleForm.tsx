@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { X, Calendar, MapPin, Clock } from 'lucide-react';
-import { ScheduleFormData } from '../../types/schedule';
+import { ScheduleFormData, SelectedLocation } from '../../types/schedule';
+import AddressSearch from './AddressSearch';
 
 interface ScheduleFormProps {
   isOpen: boolean;
@@ -22,7 +23,11 @@ const Overlay = styled(motion.div)`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 2rem;
+  padding: 1rem;
+  
+  @media (max-width: 480px) {
+    padding: 0.5rem;
+  }
 `;
 
 const FormContainer = styled(motion.div)`
@@ -30,10 +35,14 @@ const FormContainer = styled(motion.div)`
   border-radius: 1rem;
   padding: 2rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+  }
 `;
 
 const FormHeader = styled.div`
@@ -102,10 +111,19 @@ const Input = styled.input`
 `;
 
 const TimeInputGroup = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 1rem;
-  align-items: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const TimeInput = styled(Input)`
+  flex: 1;
+  min-width: 0;
+`;
+
+const FormInput = styled(Input)`
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const TimeSeparator = styled.div`
@@ -176,10 +194,12 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
   const [formData, setFormData] = useState<ScheduleFormData>({
     title: '',
     location: '',
+    locationDetail: '',
     startTime: '',
     endTime: ''
   });
   
+  const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null);
   const [errors, setErrors] = useState<Partial<ScheduleFormData>>({});
 
   const formatDisplayDate = (dateStr: string) => {
@@ -229,11 +249,23 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
       setFormData({
         title: '',
         location: '',
+        locationDetail: '',
         startTime: '',
         endTime: ''
       });
+      setSelectedLocation(null);
       setErrors({});
       onClose();
+    }
+  };
+
+  const handleLocationSelect = (location: SelectedLocation) => {
+    setSelectedLocation(location);
+    setFormData(prev => ({ ...prev, location: location.place_name }));
+    
+    // 에러가 있는 필드를 수정하면 에러 제거
+    if (errors.location) {
+      setErrors(prev => ({ ...prev, location: undefined }));
     }
   };
 
@@ -276,7 +308,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
           <FormGroup>
             <Label>
               <Calendar size={16} />
-              날짜
+              날짜 *
             </Label>
             <DateDisplay>
               {formatDisplayDate(selectedDate)}
@@ -288,7 +320,7 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
               <Clock size={16} />
               제목 *
             </Label>
-            <Input
+            <FormInput
               type="text"
               placeholder="러닝 제목을 입력하세요"
               value={formData.title}
@@ -302,13 +334,37 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
               <MapPin size={16} />
               장소 *
             </Label>
-            <Input
-              type="text"
-              placeholder="러닝 장소를 입력하세요"
-              value={formData.location}
-              onChange={(e) => handleInputChange('location', e.target.value)}
+            <AddressSearch
+              onLocationSelect={handleLocationSelect}
+              placeholder="러닝 장소를 검색하세요"
             />
             {errors.location && <ErrorMessage>{errors.location}</ErrorMessage>}
+            {selectedLocation && (
+              <div style={{ 
+                marginTop: '0.5rem', 
+                padding: '0.5rem', 
+                background: '#f8f9fa', 
+                borderRadius: '0.25rem',
+                fontSize: '0.875rem',
+                color: '#6c757d'
+              }}>
+                <strong>선택된 위치:</strong> {selectedLocation.place_name}<br/>
+                <strong>주소:</strong> {selectedLocation.road_address_name || selectedLocation.address_name}
+              </div>
+            )}
+          </FormGroup>
+
+          <FormGroup>
+            <Label>
+              <MapPin size={16} />
+              장소상세
+            </Label>
+            <FormInput
+              type="text"
+              placeholder="장소에 대한 추가 정보를 입력하세요 (예: 정문 앞, 2층 체육관 등)"
+              value={formData.locationDetail}
+              onChange={(e) => handleInputChange('locationDetail', e.target.value)}
+            />
           </FormGroup>
 
           <FormGroup>
@@ -317,26 +373,22 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
               시간 *
             </Label>
             <TimeInputGroup>
-              <div>
-                <Input
-                  type="time"
-                  value={formData.startTime}
-                  onChange={(e) => handleInputChange('startTime', e.target.value)}
-                />
-                {errors.startTime && <ErrorMessage>{errors.startTime}</ErrorMessage>}
-              </div>
+              <TimeInput
+                type="time"
+                value={formData.startTime}
+                onChange={(e) => handleInputChange('startTime', e.target.value)}
+              />
               
               <TimeSeparator>~</TimeSeparator>
               
-              <div>
-                <Input
-                  type="time"
-                  value={formData.endTime}
-                  onChange={(e) => handleInputChange('endTime', e.target.value)}
-                />
-                {errors.endTime && <ErrorMessage>{errors.endTime}</ErrorMessage>}
-              </div>
+              <TimeInput
+                type="time"
+                value={formData.endTime}
+                onChange={(e) => handleInputChange('endTime', e.target.value)}
+              />
             </TimeInputGroup>
+            {errors.startTime && <ErrorMessage>{errors.startTime}</ErrorMessage>}
+            {errors.endTime && <ErrorMessage>{errors.endTime}</ErrorMessage>}
           </FormGroup>
 
           <ButtonGroup>
