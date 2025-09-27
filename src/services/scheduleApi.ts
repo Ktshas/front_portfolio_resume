@@ -33,7 +33,8 @@ interface RunningScheduleResponse {
   placeDetail?: string;
   placeUrl?: string;
   addressName?: string;
-  createdAt: string;
+  weatherInfo?: any;
+  createdAt?: string;
 }
 
 // HTTP 클라이언트 클래스
@@ -54,7 +55,6 @@ class ApiClient {
     
     const defaultHeaders = {
       'Content-Type': 'application/json',
-      'Accept': '*/*',
     };
 
     const config: RequestInit = {
@@ -164,10 +164,42 @@ export const scheduleApi = {
         addressName: scheduleData.addressName,
       };
 
-      const response = await apiClient.post<RunningScheduleResponse>('/api/schedules/running', requestData);
-      return response.data;
+      const response = await apiClient.post<{ success: boolean; data: RunningScheduleResponse; message: string }>('/api/schedules/running', requestData);
+      
+      // success 체크
+      if (!response.data.success) {
+        console.error('스케줄 생성 실패:', response.data.message);
+        throw new Error(response.data.message);
+      }
+      
+      return response.data.data;
     } catch (error) {
       console.error('러닝 스케줄 생성 오류:', error);
+      throw error;
+    }
+  },
+
+  // 러닝 스케줄 조회 (월별)
+  async getRunningSchedules(yearMonth: string): Promise<RunningScheduleResponse[]> {
+    try {
+      const response = await apiClient.get<{ success: boolean; data: RunningScheduleResponse[] | null; message: string }>(`/api/schedules/running?yearMonth=${yearMonth}`);
+      console.log('API 응답 전체:', response);
+      
+      // success 체크
+      if (!response.success) {
+        console.error('API 요청 실패:', response.message);
+        throw new Error(response.message);
+      }
+      
+      // data가 배열인지 확인
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        console.warn('데이터가 배열이 아닙니다:', response.data);
+        return [];
+      }
+    } catch (error) {
+      console.error('러닝 스케줄 조회 오류:', error);
       throw error;
     }
   },
@@ -179,14 +211,25 @@ export const scheduleApi = {
 
   // API 응답을 RunningSchedule 타입으로 변환
   mapApiResponseToSchedule(apiResponse: RunningScheduleResponse): RunningSchedule {
+    // API 날짜 형식 (YYYYMMDD)을 프론트엔드 형식 (YYYY-MM-DD)으로 변환
+    const formatDateFromApi = (dateStr: string): string => {
+      if (dateStr.length === 8) {
+        const year = dateStr.substring(0, 4);
+        const month = dateStr.substring(4, 6);
+        const day = dateStr.substring(6, 8);
+        return `${year}-${month}-${day}`;
+      }
+      return dateStr;
+    };
+
     return {
       id: apiResponse.id,
       title: apiResponse.title,
       location: apiResponse.placeName,
       startTime: apiResponse.startTime,
       endTime: apiResponse.endTime,
-      date: apiResponse.date,
-      createdAt: apiResponse.createdAt,
+      date: formatDateFromApi(apiResponse.date),
+      createdAt: apiResponse.createdAt || new Date().toISOString(),
     };
   },
 

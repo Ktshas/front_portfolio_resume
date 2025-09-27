@@ -9,6 +9,7 @@ interface CalendarProps {
   onDateSelect: (date: string) => void;
   onScheduleClick: (schedule: RunningSchedule) => void;
   selectedDate?: string;
+  onMonthChange?: (yearMonth: string) => void;
 }
 
 const CalendarContainer = styled.div`
@@ -170,7 +171,8 @@ const Calendar: React.FC<CalendarProps> = ({
   schedules, 
   onDateSelect, 
   onScheduleClick, 
-  selectedDate 
+  selectedDate,
+  onMonthChange
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   
@@ -218,7 +220,14 @@ const Calendar: React.FC<CalendarProps> = ({
   
   const getSchedulesForDate = (date: Date) => {
     const dateStr = formatDate(date);
-    return schedules.filter(schedule => schedule.date === dateStr);
+    const daySchedules = schedules.filter(schedule => schedule.date === dateStr);
+    
+    // 디버깅용 로그
+    if (daySchedules.length > 0) {
+      console.log(`${dateStr}에 스케줄 ${daySchedules.length}개 발견:`, daySchedules);
+    }
+    
+    return daySchedules;
   };
   
   const isToday = (date: Date) => {
@@ -234,7 +243,14 @@ const Calendar: React.FC<CalendarProps> = ({
   };
   
   const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentDate(new Date(currentYear, currentMonth + (direction === 'next' ? 1 : -1), 1));
+    const newDate = new Date(currentYear, currentMonth + (direction === 'next' ? 1 : -1), 1);
+    setCurrentDate(newDate);
+    
+    // 월 변경 시 부모 컴포넌트에 알림
+    if (onMonthChange) {
+      const yearMonth = `${newDate.getFullYear()}${(newDate.getMonth() + 1).toString().padStart(2, '0')}`;
+      onMonthChange(yearMonth);
+    }
   };
   
   const weekdays = ['일', '월', '화', '수', '목', '금', '토'];

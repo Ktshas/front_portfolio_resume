@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -109,14 +109,42 @@ const RunningSchedule: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
-
-  // 로컬스토리지에서 스케줄 데이터 로드
-  useEffect(() => {
-    const savedSchedules = localStorage.getItem('runningSchedules');
-    if (savedSchedules) {
-      setSchedules(JSON.parse(savedSchedules));
+  // 스케줄 데이터 로드 함수
+  const loadSchedules = useCallback(async (yearMonth?: string) => {
+    try {
+      // 년월이 제공되지 않으면 현재 달 사용
+      const targetYearMonth = yearMonth || `${new Date().getFullYear()}${(new Date().getMonth() + 1).toString().padStart(2, '0')}`;
+      
+      console.log('스케줄 로드 요청:', targetYearMonth);
+      
+      // API에서 스케줄 조회
+      const apiSchedules = await scheduleApi.getRunningSchedules(targetYearMonth);
+      
+      // API 응답을 프론트엔드 타입으로 변환
+      const convertedSchedules = apiSchedules.map(scheduleApi.mapApiResponseToSchedule);
+      
+      // API 데이터로 완전히 대체
+      setSchedules(convertedSchedules);
+      
+      // 로컬스토리지에도 저장 (fallback용)
+      localStorage.setItem('runningSchedules', JSON.stringify(convertedSchedules));
+    } catch (error) {
+      console.error('스케줄 로드 실패:', error);
+      
+      // API 실패 시 빈 배열로 설정 (기존 로컬스토리지 데이터 무시)
+      setSchedules([]);
     }
-  }, []);
+  }, []); // 빈 의존성 배열
+
+  // 스케줄 데이터 로드 - 컴포넌트 마운트 시 한 번만 실행
+  useEffect(() => {
+    loadSchedules();
+  }, []); // 빈 의존성 배열로 한 번만 실행
+
+  // 월 변경 핸들러
+  const handleMonthChange = (yearMonth: string) => {
+    loadSchedules(yearMonth);
+  };
 
   // 스케줄 데이터를 로컬스토리지에 저장
   const saveSchedules = (newSchedules: RunningScheduleType[]) => {
@@ -167,11 +195,11 @@ const RunningSchedule: React.FC = () => {
         startTime: response.startTime,
         endTime: response.endTime,
         date: response.date,
-        createdAt: response.createdAt
+        createdAt: response.createdAt || new Date().toISOString()
       };
 
-      const newSchedules = [...schedules, newSchedule];
-      saveSchedules(newSchedules);
+      // 성공 시 스케줄 목록 새로고침
+      await loadSchedules();
       setIsFormOpen(false);
 
       alert('스케줄이 성공적으로 등록되었습니다!');
@@ -202,6 +230,7 @@ const RunningSchedule: React.FC = () => {
               onDateSelect={handleDateSelect}
               onScheduleClick={handleScheduleClick}
               selectedDate={selectedDate}
+              onMonthChange={handleMonthChange}
             />
           </ContentContainer>
 
