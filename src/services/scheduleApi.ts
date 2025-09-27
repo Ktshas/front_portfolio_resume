@@ -167,9 +167,9 @@ export const scheduleApi = {
       const response = await apiClient.post<{ success: boolean; data: RunningScheduleResponse; message: string }>('/api/schedules/running', requestData);
       
       // success 체크
-      if (!response.data.success) {
-        console.error('스케줄 생성 실패:', response.data.message);
-        throw new Error(response.data.message);
+      if (!response.success) {
+        console.error('스케줄 생성 실패:', response.message);
+        throw new Error(response.message);
       }
       
       return response.data.data;

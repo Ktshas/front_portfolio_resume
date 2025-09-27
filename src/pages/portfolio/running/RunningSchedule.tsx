@@ -187,22 +187,11 @@ const RunningSchedule: React.FC = () => {
       const response = await scheduleApi.createRunningSchedule(scheduleData);
       console.log('스케줄 등록 응답:', response);
 
-      // 성공 시 로컬 상태 업데이트
-      const newSchedule: RunningScheduleType = {
-        id: response.id,
-        title: response.title,
-        location: response.placeName,
-        startTime: response.startTime,
-        endTime: response.endTime,
-        date: response.date,
-        createdAt: response.createdAt || new Date().toISOString()
-      };
-
-      // 성공 시 스케줄 목록 새로고침
-      await loadSchedules();
       setIsFormOpen(false);
-
       alert('스케줄이 성공적으로 등록되었습니다!');
+      
+      // 페이지 새로고침
+      window.location.reload();
     } catch (error) {
       console.error('스케줄 등록 실패:', error);
       alert('스케줄 등록에 실패했습니다. 다시 시도해주세요.');
