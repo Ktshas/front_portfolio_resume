@@ -136,6 +136,28 @@ const TimeSeparator = styled.div`
   padding-bottom: 0.75rem;
 `;
 
+const TimeSelectContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+`;
+
+const TimeSelect = styled.select`
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid ${props => props.theme.colors.border};
+  border-radius: 0.5rem;
+  background: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: ${props => props.theme.colors.primary};
+  }
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
@@ -205,7 +227,9 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
   const [errors, setErrors] = useState<Partial<ScheduleFormData>>({});
 
   const formatDisplayDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // YYYY-MM-DD 형식의 문자열을 안전하게 파싱
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
@@ -275,6 +299,20 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
       setErrors(prev => ({ ...prev, location: undefined }));
     }
   };
+
+  // 30분 단위 시간 옵션 생성 (00:00, 00:30, 01:00, 01:30, ...)
+  const generateTimeOptions = () => {
+    const options = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        options.push(timeString);
+      }
+    }
+    return options;
+  };
+
+  const timeOptions = generateTimeOptions();
 
   const handleInputChange = (field: keyof ScheduleFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -379,21 +417,29 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
               <Clock size={16} />
               시간 *
             </Label>
-            <TimeInputGroup>
-              <TimeInput
-                type="time"
+            <TimeSelectContainer>
+              <TimeSelect
                 value={formData.startTime}
                 onChange={(e) => handleInputChange('startTime', e.target.value)}
-              />
+              >
+                <option value="">시작 시간</option>
+                {timeOptions.map(time => (
+                  <option key={time} value={time}>{time}</option>
+                ))}
+              </TimeSelect>
               
               <TimeSeparator>~</TimeSeparator>
               
-              <TimeInput
-                type="time"
+              <TimeSelect
                 value={formData.endTime}
                 onChange={(e) => handleInputChange('endTime', e.target.value)}
-              />
-            </TimeInputGroup>
+              >
+                <option value="">종료 시간</option>
+                {timeOptions.map(time => (
+                  <option key={time} value={time}>{time}</option>
+                ))}
+              </TimeSelect>
+            </TimeSelectContainer>
             {errors.startTime && <ErrorMessage>{errors.startTime}</ErrorMessage>}
             {errors.endTime && <ErrorMessage>{errors.endTime}</ErrorMessage>}
           </FormGroup>
