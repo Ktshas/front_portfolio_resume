@@ -10,6 +10,7 @@ interface ScheduleFormProps {
   onClose: () => void;
   onSubmit: (data: ScheduleFormData) => void;
   selectedDate: string;
+  onLocationSelect?: (location: any) => void;
 }
 
 const Overlay = styled(motion.div)`
@@ -189,7 +190,8 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
   isOpen,
   onClose,
   onSubmit,
-  selectedDate
+  selectedDate,
+  onLocationSelect
 }) => {
   const [formData, setFormData] = useState<ScheduleFormData>({
     title: '',
@@ -262,6 +264,11 @@ const ScheduleForm: React.FC<ScheduleFormProps> = ({
   const handleLocationSelect = (location: SelectedLocation) => {
     setSelectedLocation(location);
     setFormData(prev => ({ ...prev, location: location.place_name }));
+    
+    // 부모 컴포넌트에 위치 정보 전달
+    if (onLocationSelect) {
+      onLocationSelect(location);
+    }
     
     // 에러가 있는 필드를 수정하면 에러 제거
     if (errors.location) {

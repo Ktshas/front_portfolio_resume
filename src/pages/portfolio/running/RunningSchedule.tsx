@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { theme } from '../../../theme';
 import { RunningSchedule as RunningScheduleType, ScheduleFormData } from '../../../types/schedule';
+import { scheduleApi } from '../../../services/scheduleApi';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../../components/shared/GlobalHeader';
@@ -107,6 +108,7 @@ const RunningSchedule: React.FC = () => {
   const [schedules, setSchedules] = useState<RunningScheduleType[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<any>(null);
 
   // 로컬스토리지에서 스케줄 데이터 로드
   useEffect(() => {
@@ -129,17 +131,54 @@ const RunningSchedule: React.FC = () => {
   };
 
   // 스케줄 등록 핸들러
-  const handleScheduleSubmit = (formData: ScheduleFormData) => {
-    const newSchedule: RunningScheduleType = {
-      id: Date.now().toString(),
-      ...formData,
-      date: selectedDate,
-      createdAt: new Date().toISOString()
-    };
+  const handleScheduleSubmit = async (formData: ScheduleFormData) => {
+    try {
+      // 선택된 위치 정보가 있는지 확인
+      if (!selectedLocation) {
+        alert('장소를 선택해주세요.');
+        return;
+      }
 
-    const newSchedules = [...schedules, newSchedule];
-    saveSchedules(newSchedules);
-    setIsFormOpen(false);
+      // API 호출을 위한 데이터 준비
+      const scheduleData = {
+        title: formData.title,
+        date: selectedDate,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+        x: parseFloat(selectedLocation.x),
+        y: parseFloat(selectedLocation.y),
+        placeName: selectedLocation.place_name,
+        placeDetail: formData.locationDetail,
+        placeUrl: '', // 카카오 API에서 제공하지 않으므로 빈 문자열
+        addressName: selectedLocation.road_address_name || selectedLocation.address_name,
+      };
+
+      console.log('스케줄 등록 요청 데이터:', scheduleData);
+
+      // API 호출
+      const response = await scheduleApi.createRunningSchedule(scheduleData);
+      console.log('스케줄 등록 응답:', response);
+
+      // 성공 시 로컬 상태 업데이트
+      const newSchedule: RunningScheduleType = {
+        id: response.id,
+        title: response.title,
+        location: response.placeName,
+        startTime: response.startTime,
+        endTime: response.endTime,
+        date: response.date,
+        createdAt: response.createdAt
+      };
+
+      const newSchedules = [...schedules, newSchedule];
+      saveSchedules(newSchedules);
+      setIsFormOpen(false);
+
+      alert('스케줄이 성공적으로 등록되었습니다!');
+    } catch (error) {
+      console.error('스케줄 등록 실패:', error);
+      alert('스케줄 등록에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   // 스케줄 클릭 핸들러 (상세 페이지로 이동)
@@ -173,6 +212,7 @@ const RunningSchedule: React.FC = () => {
                 onClose={() => setIsFormOpen(false)}
                 onSubmit={handleScheduleSubmit}
                 selectedDate={selectedDate}
+                onLocationSelect={setSelectedLocation}
               />
             )}
           </AnimatePresence>
