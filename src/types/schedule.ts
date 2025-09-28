@@ -63,4 +63,5 @@ export interface SelectedLocation {
   road_address_name: string;
   x: string; // 경도
   y: string; // 위도
+  place_url?: string; // 장소 URL
 }

@@ -208,6 +208,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({
       road_address_name: place.road_address_name,
       x: place.x,
       y: place.y,
+      place_url: place.place_url,
     };
 
     console.log('선택된 위치 정보:', selectedLocation);

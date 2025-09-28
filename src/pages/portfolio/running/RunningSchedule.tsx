@@ -174,7 +174,7 @@ const RunningSchedule: React.FC = () => {
         y: parseFloat(selectedLocation.y),
         placeName: selectedLocation.place_name,
         placeDetail: formData.locationDetail,
-        placeUrl: '', // 카카오 API에서 제공하지 않으므로 빈 문자열
+        placeUrl: selectedLocation.place_url || '', // 카카오 API에서 place_url 사용
         addressName: selectedLocation.road_address_name || selectedLocation.address_name,
       };
 
