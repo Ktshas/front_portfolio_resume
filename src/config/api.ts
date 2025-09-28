@@ -5,7 +5,7 @@ const API_CONFIG = {
     timeout: 10000,
   },
   production: {
-    baseURL: 'https://your-production-api.com',
+    baseURL: 'https://tskim-portfolio-backend.onrender.com',
     timeout: 10000,
   },
   local: {
