@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ThemeProvider } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { AlertTriangle } from 'lucide-react';
 import { theme } from '../../../theme';
 import { RunningSchedule as RunningScheduleType, ScheduleFormData } from '../../../types/schedule';
 import { scheduleApi } from '../../../services/scheduleApi';
@@ -36,6 +37,28 @@ const PortfolioTitle = styled.h1`
 const ContentContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+`;
+
+const WeatherApiWarning = styled.div`
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #dc2626;
+  font-weight: 500;
+  font-size: 0.95rem;
+`;
+
+const WarningIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dc2626;
+  flex-shrink: 0;
 `;
 
 
@@ -208,8 +231,14 @@ const RunningSchedule: React.FC = () => {
         <PortfolioContainer>
           <PortfolioTitle>러닝 스케줄 날씨 알림</PortfolioTitle>
           
-
           <ContentContainer>
+            <WeatherApiWarning>
+              <WarningIcon>
+                <AlertTriangle size={20} />
+              </WarningIcon>
+              데이터센터 화재로 인해 날씨 API를 습득할 수 없습니다
+            </WeatherApiWarning>
+            
             <UpcomingSchedule schedules={schedules} />
             <Calendar
               schedules={schedules}
