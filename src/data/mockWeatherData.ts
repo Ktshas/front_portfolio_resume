@@ -117,11 +117,20 @@ export const getWeatherEmoji = (condition: string): string => {
 };
 
 // 날씨 조건에 따른 러닝 적합도 평가
-export const getRunningCondition = (weather: WeatherInfo): {
+export const getRunningCondition = (weather: WeatherInfo | null): {
   rating: 'excellent' | 'good' | 'fair' | 'poor';
   message: string;
   color: string;
 } => {
+  // 날씨 정보가 없는 경우
+  if (!weather) {
+    return {
+      rating: 'fair',
+      message: '날씨 정보를 불러올 수 없습니다.',
+      color: '#6b7280'
+    };
+  }
+
   const { temperature, precipitation, windSpeed, weatherCondition } = weather;
   
   // 강수량이 있으면 나쁨

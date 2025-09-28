@@ -12,7 +12,6 @@ import {
 import { theme } from '../../../theme';
 import { RunningSchedule, WeatherInfo } from '../../../types/schedule';
 import { 
-  generateMockWeatherData, 
   getRunningCondition 
 } from '../../../data/mockWeatherData';
 import { scheduleApi } from '../../../services/scheduleApi';
@@ -205,20 +204,15 @@ const ScheduleDetail: React.FC = () => {
         console.log('스케줄 상세 정보 로드 완료:', convertedSchedule);
         console.log('weatherInfo 존재 여부:', !!convertedSchedule.weatherInfo);
 
-        // 날씨 정보 처리
+        // 날씨 정보 처리 - API에서 weatherInfo가 있는 경우만 표시
         if (convertedSchedule.weatherInfo) {
           // API에서 weatherInfo가 있는 경우 해당 정보 사용
           console.log('API weatherInfo 사용:', convertedSchedule.weatherInfo);
           setWeatherData([convertedSchedule.weatherInfo]);
         } else {
-          // weatherInfo가 없는 경우 mock 데이터 사용
-          console.log('weatherInfo 없음, mock 데이터 사용');
-          const mockWeather = generateMockWeatherData(
-            convertedSchedule.date,
-            convertedSchedule.startTime,
-            convertedSchedule.endTime
-          );
-          setWeatherData(mockWeather);
+          // weatherInfo가 null인 경우 날씨 카드 표시하지 않음
+          console.log('weatherInfo가 null, 날씨 카드 표시하지 않음');
+          setWeatherData([]);
         }
       } catch (error) {
         console.error('스케줄 상세 조회 실패:', error);
@@ -227,12 +221,12 @@ const ScheduleDetail: React.FC = () => {
         if (location.state?.schedule) {
           const scheduleData = location.state.schedule as RunningSchedule;
           setSchedule(scheduleData);
-          const weather = generateMockWeatherData(
-            scheduleData.date,
-            scheduleData.startTime,
-            scheduleData.endTime
-          );
-          setWeatherData(weather);
+          // API 실패 시에도 weatherInfo가 있으면 사용, 없으면 표시하지 않음
+          if (scheduleData.weatherInfo) {
+            setWeatherData([scheduleData.weatherInfo]);
+          } else {
+            setWeatherData([]);
+          }
         } else {
           // 로컬스토리지에서 스케줄 찾기
           const savedSchedules = localStorage.getItem('runningSchedules');
@@ -242,12 +236,12 @@ const ScheduleDetail: React.FC = () => {
             
             if (foundSchedule) {
               setSchedule(foundSchedule);
-              const weather = generateMockWeatherData(
-                foundSchedule.date,
-                foundSchedule.startTime,
-                foundSchedule.endTime
-              );
-              setWeatherData(weather);
+              // 로컬스토리지에서도 weatherInfo가 있으면 사용, 없으면 표시하지 않음
+              if (foundSchedule.weatherInfo) {
+                setWeatherData([foundSchedule.weatherInfo]);
+              } else {
+                setWeatherData([]);
+              }
             } else {
               setError('스케줄을 찾을 수 없습니다.');
             }
@@ -318,7 +312,7 @@ const ScheduleDetail: React.FC = () => {
     );
   }
 
-  const runningCondition = getRunningCondition(weatherData[0] || {} as WeatherInfo);
+  const runningCondition = getRunningCondition(weatherData.length > 0 ? weatherData[0] : null);
 
   return (
     <ThemeProvider theme={theme}>
@@ -408,17 +402,19 @@ const ScheduleDetail: React.FC = () => {
               {runningCondition.message}
             </RunningConditionBadge>
 
-            <WeatherContainer>
-              <WeatherHeader>
-                <WeatherTitle>🌤️ 날씨 정보</WeatherTitle>
-              </WeatherHeader>
+            {weatherData.length > 0 && (
+              <WeatherContainer>
+                <WeatherHeader>
+                  <WeatherTitle>🌤️ 날씨 정보</WeatherTitle>
+                </WeatherHeader>
 
-              <WeatherGrid>
-                {weatherData.map((weather, index) => (
-                  <WeatherCard key={index} weather={weather} />
-                ))}
-              </WeatherGrid>
-            </WeatherContainer>
+                <WeatherGrid>
+                  {weatherData.map((weather, index) => (
+                    <WeatherCard key={index} weather={weather} />
+                  ))}
+                </WeatherGrid>
+              </WeatherContainer>
+            )}
           </ContentContainer>
         </PortfolioContainer>
       </div>
