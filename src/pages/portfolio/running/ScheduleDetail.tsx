@@ -7,7 +7,6 @@ import {
   Calendar, 
   MapPin, 
   Clock, 
-  Trash2,
   Edit
 } from 'lucide-react';
 import { theme } from '../../../theme';
@@ -16,6 +15,7 @@ import {
   generateMockWeatherData, 
   getRunningCondition 
 } from '../../../data/mockWeatherData';
+import { scheduleApi } from '../../../services/scheduleApi';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../../components/shared/GlobalHeader';
@@ -178,51 +178,91 @@ const ScheduleDetail: React.FC = () => {
   
   const [schedule, setSchedule] = useState<RunningSchedule | null>(null);
   const [weatherData, setWeatherData] = useState<WeatherInfo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // URL state에서 스케줄 정보 가져오기
-    if (location.state?.schedule) {
-      const scheduleData = location.state.schedule as RunningSchedule;
-      setSchedule(scheduleData);
-      
-      // 날씨 데이터 생성
-      const weather = generateMockWeatherData(
-        scheduleData.date,
-        scheduleData.startTime,
-        scheduleData.endTime
-      );
-      setWeatherData(weather);
-    } else {
-      // 로컬스토리지에서 스케줄 찾기
-      const savedSchedules = localStorage.getItem('runningSchedules');
-      if (savedSchedules) {
-        const schedules: RunningSchedule[] = JSON.parse(savedSchedules);
-        const foundSchedule = schedules.find(s => s.id === scheduleId);
+    const loadScheduleDetail = async () => {
+      if (!scheduleId) {
+        setError('스케줄 ID가 없습니다.');
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        console.log('스케줄 상세 정보 로드 시작:', scheduleId);
         
-        if (foundSchedule) {
-          setSchedule(foundSchedule);
+        // API로 스케줄 상세 정보 조회
+        const detailedSchedule = await scheduleApi.getRunningScheduleById(scheduleId);
+        
+        // API 응답을 프론트엔드 타입으로 변환
+        const convertedSchedule = scheduleApi.mapApiResponseToSchedule(detailedSchedule);
+        setSchedule(convertedSchedule);
+        
+        console.log('스케줄 상세 정보 로드 완료:', convertedSchedule);
+        console.log('weatherInfo 존재 여부:', !!convertedSchedule.weatherInfo);
+
+        // 날씨 정보 처리
+        if (convertedSchedule.weatherInfo) {
+          // API에서 weatherInfo가 있는 경우 해당 정보 사용
+          console.log('API weatherInfo 사용:', convertedSchedule.weatherInfo);
+          setWeatherData([convertedSchedule.weatherInfo]);
+        } else {
+          // weatherInfo가 없는 경우 mock 데이터 사용
+          console.log('weatherInfo 없음, mock 데이터 사용');
+          const mockWeather = generateMockWeatherData(
+            convertedSchedule.date,
+            convertedSchedule.startTime,
+            convertedSchedule.endTime
+          );
+          setWeatherData(mockWeather);
+        }
+      } catch (error) {
+        console.error('스케줄 상세 조회 실패:', error);
+        
+        // API 실패 시 URL state나 로컬스토리지에서 fallback
+        if (location.state?.schedule) {
+          const scheduleData = location.state.schedule as RunningSchedule;
+          setSchedule(scheduleData);
           const weather = generateMockWeatherData(
-            foundSchedule.date,
-            foundSchedule.startTime,
-            foundSchedule.endTime
+            scheduleData.date,
+            scheduleData.startTime,
+            scheduleData.endTime
           );
           setWeatherData(weather);
+        } else {
+          // 로컬스토리지에서 스케줄 찾기
+          const savedSchedules = localStorage.getItem('runningSchedules');
+          if (savedSchedules) {
+            const schedules: RunningSchedule[] = JSON.parse(savedSchedules);
+            const foundSchedule = schedules.find(s => s.id === scheduleId);
+            
+            if (foundSchedule) {
+              setSchedule(foundSchedule);
+              const weather = generateMockWeatherData(
+                foundSchedule.date,
+                foundSchedule.startTime,
+                foundSchedule.endTime
+              );
+              setWeatherData(weather);
+            } else {
+              setError('스케줄을 찾을 수 없습니다.');
+            }
+          } else {
+            setError('스케줄을 찾을 수 없습니다.');
+          }
         }
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+
+    loadScheduleDetail();
   }, [scheduleId, location.state]);
 
-  const handleDelete = () => {
-    if (schedule && window.confirm('정말로 이 스케줄을 삭제하시겠습니까?')) {
-      const savedSchedules = localStorage.getItem('runningSchedules');
-      if (savedSchedules) {
-        const schedules: RunningSchedule[] = JSON.parse(savedSchedules);
-        const updatedSchedules = schedules.filter(s => s.id !== schedule.id);
-        localStorage.setItem('runningSchedules', JSON.stringify(updatedSchedules));
-      }
-      navigate('/portfolio/running');
-    }
-  };
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -235,18 +275,41 @@ const ScheduleDetail: React.FC = () => {
   };
 
   const formatTime = (time: string) => {
-    return time.replace(':', '시 ') + '분';
+    // HHMM 형식을 HH:mm 형식으로 변환
+    if (time.length === 4 && !time.includes(':')) {
+      return time.substring(0, 2) + ':' + time.substring(2, 4);
+    }
+    return time; // 이미 HH:mm 형식인 경우 그대로 사용
   };
 
-  if (!schedule) {
+  if (isLoading) {
     return (
       <ThemeProvider theme={theme}>
         <div>
           <GlobalHeader />
+          <PortfolioNavigation />
+          <PortfolioContainer>
+            <ContentContainer>
+              <div style={{ textAlign: 'center', padding: '2rem' }}>
+                <div style={{ fontSize: '1.2rem', color: '#6366f1' }}>스케줄 정보를 불러오는 중...</div>
+              </div>
+            </ContentContainer>
+          </PortfolioContainer>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  if (error || !schedule) {
+    return (
+      <ThemeProvider theme={theme}>
+        <div>
+          <GlobalHeader />
+          <PortfolioNavigation />
           <PortfolioContainer>
             <ContentContainer>
               <ErrorMessage>
-                스케줄을 찾을 수 없습니다.
+                {error || '스케줄을 찾을 수 없습니다.'}
               </ErrorMessage>
             </ContentContainer>
           </PortfolioContainer>
@@ -282,14 +345,6 @@ const ScheduleDetail: React.FC = () => {
                   >
                     <Edit size={16} />
                   </ActionButton>
-                  <ActionButton
-                    variant="delete"
-                    onClick={handleDelete}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Trash2 size={16} />
-                  </ActionButton>
                 </ActionButtons>
               </ScheduleHeader>
 
@@ -320,7 +375,30 @@ const ScheduleDetail: React.FC = () => {
                   </DetailIcon>
                   <DetailContent>
                     <h4>장소</h4>
-                    <p>{schedule.location}</p>
+                    <p>
+                      {schedule.location}
+                      {schedule.placeDetail && ` - ${schedule.placeDetail}`}
+                    </p>
+                    {schedule.addressName && (
+                      <p style={{ marginTop: '0.25rem' }}>
+                        {schedule.placeUrl ? (
+                          <a 
+                            href={schedule.placeUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style={{ 
+                              color: '#6366f1', 
+                              textDecoration: 'none',
+                              borderBottom: '1px solid #6366f1'
+                            }}
+                          >
+                            {schedule.addressName}
+                          </a>
+                        ) : (
+                          schedule.addressName
+                        )}
+                      </p>
+                    )}
                   </DetailContent>
                 </DetailItem>
               </ScheduleDetails>

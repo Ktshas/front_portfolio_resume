@@ -7,6 +7,9 @@ export interface RunningSchedule {
   date: string;      // YYYY-MM-DD 형식
   createdAt: string;
   weatherInfo?: WeatherInfo | null; // 날씨 정보 (선택적)
+  placeDetail?: string; // 상세 장소
+  addressName?: string; // 주소
+  placeUrl?: string;    // 장소 URL
 }
 
 export interface WeatherInfo {

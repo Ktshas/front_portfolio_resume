@@ -237,6 +237,24 @@ export const scheduleApi = {
     }
   },
 
+  // 러닝 스케줄 삭제
+  async deleteRunningSchedule(id: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const response = await apiClient.delete<{ success: boolean; message: string }>(
+        `/api/schedules/running/${id}`
+      );
+      console.log(`스케줄 삭제 API 응답 (ID: ${id}):`, response);
+      
+      return {
+        success: response.success,
+        message: response.message || '삭제 완료'
+      };
+    } catch (error) {
+      console.error(`러닝 스케줄 삭제 오류 (ID: ${id}):`, error);
+      throw error;
+    }
+  },
+
   // 모든 스케줄 조회 (로컬스토리지에서)
   async getAllSchedules(): Promise<RunningSchedule[]> {
     return this.getSchedulesFromLocalStorage();
@@ -264,6 +282,9 @@ export const scheduleApi = {
       date: formatDateFromApi(apiResponse.date),
       createdAt: apiResponse.createdAt || new Date().toISOString(),
       weatherInfo: apiResponse.weatherInfo, // weatherInfo 포함
+      placeDetail: apiResponse.placeDetail,
+      addressName: apiResponse.addressName,
+      placeUrl: apiResponse.placeUrl,
     };
   },
 
