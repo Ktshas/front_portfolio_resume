@@ -179,7 +179,7 @@ export const scheduleApi = {
     }
   },
 
-  // 러닝 스케줄 조회 (월별)
+  // 러닝 스케줄 조회 (월별) - 년월로 조회 (기존 방식) TODO : 미사용, 삭제 예정
   async getRunningSchedules(yearMonth: string): Promise<RunningScheduleResponse[]> {
     try {
       const response = await apiClient.get<{ success: boolean; data: RunningScheduleResponse[] | null; message: string }>(`/api/schedules/running?yearMonth=${yearMonth}`);
@@ -200,6 +200,37 @@ export const scheduleApi = {
       }
     } catch (error) {
       console.error('러닝 스케줄 조회 오류:', error);
+      throw error;
+    }
+  },
+
+  // 러닝 스케줄 조회 (날짜 범위로 조회) - 새로운 방식
+  async getRunningSchedulesByDateRange(startDate: string, endDate: string): Promise<RunningScheduleResponse[]> {
+    try {
+      // 날짜 형식을 YYYYMMDD로 변환
+      const startDateFormatted = startDate.replace(/-/g, '');
+      const endDateFormatted = endDate.replace(/-/g, '');
+      
+      const response = await apiClient.get<{ success: boolean; data: RunningScheduleResponse[] | null; message: string }>(
+        `/api/schedules/running/range?startDate=${startDateFormatted}&endDate=${endDateFormatted}`
+      );
+      console.log('API 응답 전체 (날짜 범위):', response);
+      
+      // success 체크
+      if (!response.success) {
+        console.error('API 요청 실패:', response.message);
+        throw new Error(response.message);
+      }
+      
+      // data가 배열인지 확인
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        console.warn('데이터가 배열이 아닙니다:', response.data);
+        return [];
+      }
+    } catch (error) {
+      console.error('러닝 스케줄 조회 오류 (날짜 범위):', error);
       throw error;
     }
   },

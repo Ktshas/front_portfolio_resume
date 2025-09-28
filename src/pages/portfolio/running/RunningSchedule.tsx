@@ -6,6 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import { theme } from '../../../theme';
 import { RunningSchedule as RunningScheduleType, ScheduleFormData } from '../../../types/schedule';
 import { scheduleApi } from '../../../services/scheduleApi';
+import { getCalendarDateRangeFromYearMonth, debugCalendarRange } from '../../../utils/dateUtils';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../../components/shared/GlobalHeader';
@@ -117,8 +118,12 @@ const RunningSchedule: React.FC = () => {
       
       console.log('스케줄 로드 요청:', targetYearMonth);
       
-      // API에서 스케줄 조회
-      const apiSchedules = await scheduleApi.getRunningSchedules(targetYearMonth);
+      // 달력에 표시되는 실제 날짜 범위 계산
+      const dateRange = getCalendarDateRangeFromYearMonth(targetYearMonth);
+      debugCalendarRange(targetYearMonth);
+      
+      // 새로운 날짜 범위 API 호출
+      const apiSchedules = await scheduleApi.getRunningSchedulesByDateRange(dateRange.startDate, dateRange.endDate);
       
       // API 응답을 프론트엔드 타입으로 변환
       const convertedSchedules = apiSchedules.map(scheduleApi.mapApiResponseToSchedule);
@@ -130,9 +135,7 @@ const RunningSchedule: React.FC = () => {
       localStorage.setItem('runningSchedules', JSON.stringify(convertedSchedules));
     } catch (error) {
       console.error('스케줄 로드 실패:', error);
-      
-      // API 실패 시 빈 배열로 설정 (기존 로컬스토리지 데이터 무시)
-      setSchedules([]);
+        setSchedules([]);
     }
   }, []); // 빈 의존성 배열
 
@@ -144,12 +147,6 @@ const RunningSchedule: React.FC = () => {
   // 월 변경 핸들러
   const handleMonthChange = (yearMonth: string) => {
     loadSchedules(yearMonth);
-  };
-
-  // 스케줄 데이터를 로컬스토리지에 저장
-  const saveSchedules = (newSchedules: RunningScheduleType[]) => {
-    setSchedules(newSchedules);
-    localStorage.setItem('runningSchedules', JSON.stringify(newSchedules));
   };
 
   // 날짜 선택 핸들러
