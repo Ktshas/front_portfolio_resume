@@ -263,6 +263,7 @@ export const scheduleApi = {
       endTime: apiResponse.endTime,
       date: formatDateFromApi(apiResponse.date),
       createdAt: apiResponse.createdAt || new Date().toISOString(),
+      weatherInfo: apiResponse.weatherInfo, // weatherInfo 포함
     };
   },
 

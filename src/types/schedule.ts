@@ -6,6 +6,7 @@ export interface RunningSchedule {
   endTime: string;   // HH:mm 형식
   date: string;      // YYYY-MM-DD 형식
   createdAt: string;
+  weatherInfo?: WeatherInfo | null; // 날씨 정보 (선택적)
 }
 
 export interface WeatherInfo {

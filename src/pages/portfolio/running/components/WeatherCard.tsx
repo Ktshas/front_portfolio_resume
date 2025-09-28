@@ -5,7 +5,7 @@ import { WeatherInfo } from '../../../../types/schedule';
 import { getWeatherEmoji } from '../../../../data/mockWeatherData';
 
 interface WeatherCardProps {
-  weather: WeatherInfo;
+  weather: WeatherInfo | null;
 }
 
 const WeatherItem = styled.div`
@@ -97,6 +97,15 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
   const hasRain = (weather: WeatherInfo) => {
     return weather.precipitation > 0 || weather.precipitationProbability > 30;
   };
+
+  // weatherInfo가 null인 경우 처리
+  if (!weather) {
+    return (
+      <WeatherItem>
+        <WeatherTime>날씨 정보 없음</WeatherTime>
+      </WeatherItem>
+    );
+  }
 
   return (
     <WeatherItem>

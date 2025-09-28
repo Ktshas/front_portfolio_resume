@@ -112,6 +112,7 @@ const DaysUntil = styled.div`
 const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
   const [upcomingSchedule, setUpcomingSchedule] = useState<RunningSchedule | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasDetailedInfo, setHasDetailedInfo] = useState(false);
 
   const getUpcomingScheduleId = (): string | null => {
     const today = new Date();
@@ -158,6 +159,7 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
       if (existingSchedule) {
         // 기존 데이터가 있으면 일단 표시하고, 상세 정보는 별도로 로드
         setUpcomingSchedule(existingSchedule);
+        setHasDetailedInfo(false); // 아직 상세 정보는 로드되지 않음
       }
 
       setIsLoading(true);
@@ -170,13 +172,16 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
         // API 응답을 프론트엔드 타입으로 변환
         const convertedSchedule = scheduleApi.mapApiResponseToSchedule(detailedSchedule);
         setUpcomingSchedule(convertedSchedule);
+        setHasDetailedInfo(true); // 상세 정보 로드 완료
         
         console.log('다가오는 스케줄 상세 정보 로드 완료:', convertedSchedule);
+        console.log('weatherInfo 존재 여부:', !!convertedSchedule.weatherInfo);
       } catch (error) {
         console.error('다가오는 스케줄 상세 조회 실패:', error);
         // 실패 시 기존 데이터 사용 (기상정보 없음)
         const fallbackSchedule = schedules.find(s => s.id === upcomingScheduleId);
         setUpcomingSchedule(fallbackSchedule || null);
+        setHasDetailedInfo(false); // 상세 정보 로드 실패
       } finally {
         setIsLoading(false);
       }
@@ -259,9 +264,28 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
     );
   }
 
-  // 시작 시간과 종료 시간의 날씨 정보 가져오기
-  const startWeather = getWeatherForTime(upcomingSchedule.date, upcomingSchedule.startTime);
-  const endWeather = getWeatherForTime(upcomingSchedule.date, upcomingSchedule.endTime);
+  // 날씨 정보 가져오기 (API에서 weatherInfo가 null인 경우 처리)
+  const getWeatherInfo = (date: string, time: string) => {
+    // 상세 API 호출이 완료되었는지 확인
+    if (hasDetailedInfo && upcomingSchedule) {
+      if (upcomingSchedule.weatherInfo) {
+        // API에서 weatherInfo가 있는 경우 해당 정보 사용
+        console.log('API weatherInfo 사용:', upcomingSchedule.weatherInfo);
+        return upcomingSchedule.weatherInfo;
+      } else {
+        // API에서 weatherInfo가 null인 경우 null 반환
+        console.log('API에서 weatherInfo가 null, null 반환');
+        return null;
+      }
+    } else {
+      // 상세 API 호출이 아직 완료되지 않은 경우 mock 데이터 사용
+      console.log('상세 API 호출 미완료, mock 데이터 사용:', date, time);
+      return getWeatherForTime(date, time);
+    }
+  };
+
+  const startWeather = getWeatherInfo(upcomingSchedule.date, upcomingSchedule.startTime);
+  const endWeather = getWeatherInfo(upcomingSchedule.date, upcomingSchedule.endTime);
   const weatherData = [startWeather, endWeather];
 
   return (
