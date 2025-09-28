@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Calendar, Clock, MapPin, Loader } from 'lucide-react';
 import { RunningSchedule } from '../../types/schedule';
 import { getWeatherForTime } from '../../data/mockWeatherData';
 import WeatherCard from '../../pages/portfolio/running/components/WeatherCard';
+import { scheduleApi } from '../../services/scheduleApi';
 
 interface UpcomingScheduleProps {
   schedules: RunningSchedule[];
@@ -109,7 +110,10 @@ const DaysUntil = styled.div`
 `;
 
 const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
-  const getUpcomingSchedule = (): RunningSchedule | null => {
+  const [upcomingSchedule, setUpcomingSchedule] = useState<RunningSchedule | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getUpcomingScheduleId = (): string | null => {
     const today = new Date();
     // 오늘 날짜를 00:00:00으로 설정하여 날짜만 비교
     today.setHours(0, 0, 0, 0);
@@ -136,8 +140,50 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
       return dateA.getTime() - dateB.getTime();
     });
 
-    return upcomingSchedules.length > 0 ? upcomingSchedules[0] : null;
+    return upcomingSchedules.length > 0 ? upcomingSchedules[0].id : null;
   };
+
+  // 다가오는 스케줄의 상세 정보를 로드
+  useEffect(() => {
+    const loadUpcomingScheduleDetail = async () => {
+      const upcomingScheduleId = getUpcomingScheduleId();
+      
+      if (!upcomingScheduleId) {
+        setUpcomingSchedule(null);
+        return;
+      }
+
+      // 기존 스케줄 데이터 확인
+      const existingSchedule = schedules.find(s => s.id === upcomingScheduleId);
+      if (existingSchedule) {
+        // 기존 데이터가 있으면 일단 표시하고, 상세 정보는 별도로 로드
+        setUpcomingSchedule(existingSchedule);
+      }
+
+      setIsLoading(true);
+      try {
+        console.log('다가오는 스케줄 상세 정보 로드 시작:', upcomingScheduleId);
+        
+        // ID로 상세 스케줄 정보 조회 (기상정보 포함)
+        const detailedSchedule = await scheduleApi.getRunningScheduleById(upcomingScheduleId);
+        
+        // API 응답을 프론트엔드 타입으로 변환
+        const convertedSchedule = scheduleApi.mapApiResponseToSchedule(detailedSchedule);
+        setUpcomingSchedule(convertedSchedule);
+        
+        console.log('다가오는 스케줄 상세 정보 로드 완료:', convertedSchedule);
+      } catch (error) {
+        console.error('다가오는 스케줄 상세 조회 실패:', error);
+        // 실패 시 기존 데이터 사용 (기상정보 없음)
+        const fallbackSchedule = schedules.find(s => s.id === upcomingScheduleId);
+        setUpcomingSchedule(fallbackSchedule || null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadUpcomingScheduleDetail();
+  }, [schedules]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -153,7 +199,11 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
   };
 
   const formatTime = (time: string) => {
-    return time.replace(':', '시 ') + '분';
+    // HHMM 형식을 HH:mm 형식으로 변환
+    if (time.length === 4 && !time.includes(':')) {
+      return time.substring(0, 2) + ':' + time.substring(2, 4);
+    }
+    return time; // 이미 HH:mm 형식인 경우 그대로 사용
   };
 
   const getDaysUntil = (dateStr: string): string => {
@@ -172,7 +222,24 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
     return `D-${diffDays}`;
   };
 
-  const upcomingSchedule = getUpcomingSchedule();
+  if (isLoading) {
+    return (
+      <UpcomingContainer
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <UpcomingHeader>
+          <Calendar size={20} color="#6366f1" />
+          <UpcomingTitle>다가오는 러닝 스케줄</UpcomingTitle>
+        </UpcomingHeader>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '2rem' }}>
+          <Loader size={24} className="animate-spin" />
+          <span style={{ marginLeft: '0.5rem', color: '#6366f1' }}>스케줄 정보를 불러오는 중...</span>
+        </div>
+      </UpcomingContainer>
+    );
+  }
 
   if (!upcomingSchedule) {
     return (

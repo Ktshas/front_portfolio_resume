@@ -87,7 +87,11 @@ const RainProbability = styled.span`
 
 const WeatherCard: React.FC<WeatherCardProps> = ({ weather }) => {
   const formatTime = (time: string) => {
-    return time.replace(':', '시 ') + '분';
+    // HHMM 형식을 HH:mm 형식으로 변환
+    if (time.length === 4 && !time.includes(':')) {
+      return time.substring(0, 2) + ':' + time.substring(2, 4);
+    }
+    return time; // 이미 HH:mm 형식인 경우 그대로 사용
   };
 
   const hasRain = (weather: WeatherInfo) => {

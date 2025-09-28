@@ -122,7 +122,7 @@ const RunningSchedule: React.FC = () => {
       const dateRange = getCalendarDateRangeFromYearMonth(targetYearMonth);
       debugCalendarRange(targetYearMonth);
       
-      // 새로운 날짜 범위 API 호출
+      // 날짜 범위로 모든 스케줄 데이터 조회 (달력 표시용)
       const apiSchedules = await scheduleApi.getRunningSchedulesByDateRange(dateRange.startDate, dateRange.endDate);
       
       // API 응답을 프론트엔드 타입으로 변환
@@ -135,7 +135,7 @@ const RunningSchedule: React.FC = () => {
       localStorage.setItem('runningSchedules', JSON.stringify(convertedSchedules));
     } catch (error) {
       console.error('스케줄 로드 실패:', error);
-        setSchedules([]);
+      setSchedules([]);
     }
   }, []); // 빈 의존성 배열
 
