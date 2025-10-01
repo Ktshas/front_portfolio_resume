@@ -461,7 +461,7 @@ const About: React.FC = () => {
               
               <DownloadButtons>
                 <DownloadButton
-                  href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서_250918.pdf`}
+                  href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서.pdf`}
                   download="김태성_이력서_경력기술서.pdf"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}

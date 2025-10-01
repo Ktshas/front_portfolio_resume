@@ -245,7 +245,7 @@ const Hero: React.FC = () => {
               기술 스택 보기
             </PrimaryButton>
             <SecondaryButton
-              href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서_250918.pdf`}
+              href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서.pdf`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
