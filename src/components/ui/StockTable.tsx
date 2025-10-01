@@ -216,9 +216,15 @@ const DirectionIcon = styled.div<{ direction: 'RISING' | 'FALLING' | 'EVEN' }>`
   }};
 `;
 
-const TargetPrice = styled.div`
+const TargetPrice = styled.div<{ status: 'ACHIEVED_BUY' | 'ACHIEVED_SELL' | 'NOT_ACHIEVED' }>`
   font-weight: 600;
-  color: ${props => props.theme.colors.primary};
+  color: ${props => {
+    switch (props.status) {
+      case 'ACHIEVED_BUY': return '#ef4444'; // 빨간색 (매수 목표 도달)
+      case 'ACHIEVED_SELL': return '#3b82f6'; // 파란색 (매도 목표 도달)
+      default: return props.theme.colors.text; // 검정색 (기본)
+    }
+  }};
   font-size: 1rem;
   text-align: center;
 
@@ -243,6 +249,22 @@ const StockTable: React.FC<StockTableProps> = ({ stocks }) => {
         return <TrendingDown size={14} />;
       default:
         return <Minus size={14} />;
+    }
+  };
+
+  // 목표가 도달 여부 판단 함수
+  const getTargetPriceStatus = (stock: StockData): 'ACHIEVED_BUY' | 'ACHIEVED_SELL' | 'NOT_ACHIEVED' => {
+    if (!stock.targetPriceDirection) return 'NOT_ACHIEVED';
+    
+    const currentPrice = parseFloat(stock.closePrice.replace(/,/g, ''));
+    const targetPrice = parseFloat(stock.targetPrice.replace(/,/g, ''));
+    
+    if (stock.targetPriceDirection === 'UP') {
+      // 매도 목표: 현재가 >= 목표가
+      return currentPrice >= targetPrice ? 'ACHIEVED_SELL' : 'NOT_ACHIEVED';
+    } else {
+      // 매수 목표: 현재가 <= 목표가
+      return currentPrice <= targetPrice ? 'ACHIEVED_BUY' : 'NOT_ACHIEVED';
     }
   };
 
@@ -278,33 +300,37 @@ const StockTable: React.FC<StockTableProps> = ({ stocks }) => {
           </HeaderCell>
         </TableHeaderRow>
         
-        {stocks.map((stock, index) => (
-          <TableRow
-            key={stock.itemCode}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ scale: 1.01 }}
-          >
-            <StockInfo>
-              <StockName>{stock.stockName}</StockName>
-            </StockInfo>
-            
-            <PriceInfo>
-              <CurrentPrice>{stock.closePrice}원</CurrentPrice>
-            </PriceInfo>
-            
-            <PriceChange direction={stock.compareDirection}>
-              <DirectionIcon direction={stock.compareDirection}>
-                {getDirectionIcon(stock.compareDirection)}
-              </DirectionIcon>
-              {stock.compareToPreviousClosePrice}
-              <span>({stock.fluctuationsRatio}%)</span>
-            </PriceChange>
-            
-            <TargetPrice>{stock.targetPrice}원</TargetPrice>
-          </TableRow>
-        ))}
+        {stocks.map((stock, index) => {
+          const targetStatus = getTargetPriceStatus(stock);
+          
+          return (
+            <TableRow
+              key={stock.itemCode}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.01 }}
+            >
+              <StockInfo>
+                <StockName>{stock.stockName}</StockName>
+              </StockInfo>
+              
+              <PriceInfo>
+                <CurrentPrice>{stock.closePrice}원</CurrentPrice>
+              </PriceInfo>
+              
+              <PriceChange direction={stock.compareDirection}>
+                <DirectionIcon direction={stock.compareDirection}>
+                  {getDirectionIcon(stock.compareDirection)}
+                </DirectionIcon>
+                {stock.compareToPreviousClosePrice}
+                <span>({stock.fluctuationsRatio}%)</span>
+              </PriceChange>
+              
+              <TargetPrice status={targetStatus}>{stock.targetPrice}원</TargetPrice>
+            </TableRow>
+          );
+        })}
       </Table>
     </StockTableContainer>
   );

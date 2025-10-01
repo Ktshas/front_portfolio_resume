@@ -14,6 +14,7 @@ export interface StockData {
   localTradedAt: string;
   currencyType: string;
   targetPrice: string;
+  targetPriceDirection?: 'UP' | 'DOWN';
   compareDirectionKorean: string;
   marketStatusKorean: string;
 }
