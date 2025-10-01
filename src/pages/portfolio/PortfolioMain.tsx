@@ -123,7 +123,7 @@ const PortfolioMain: React.FC = () => {
       icon: <TrendingUp size={24} />,
       path: '/portfolio/stock',
       tags: ['React', 'API 연동', '실시간 데이터', '개인프로젝트', '금융 데이터', '알림 시스템']
-    }
+    },
     {
       id: 'running-schedule',
       title: '러닝 스케줄 날씨 알림',
@@ -131,7 +131,7 @@ const PortfolioMain: React.FC = () => {
       icon: <Activity size={24} />,
       path: '/portfolio/running',
       tags: ['React', 'API 연동', '풀스택', '개인프로젝트', '비동기처리', 'SpringBoot']
-    },
+    }
   ];
 
   return (
