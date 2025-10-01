@@ -6,6 +6,7 @@ import PortfolioMain from './PortfolioMain';
 import WorkPortfolio from './work/WorkPortfolio';
 import RunningSchedule from './running/RunningSchedule';
 import ScheduleDetail from './running/ScheduleDetail';
+import StockAlerts from './stock/StockAlerts';
 
 const Portfolio: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const Portfolio: React.FC = () => {
       <Route path="work" element={<WorkPortfolio />} />
       <Route path="running" element={<RunningSchedule />} />
       <Route path="running/schedule/:scheduleId" element={<ScheduleDetail />} />
+      <Route path="stock" element={<StockAlerts />} />
     </Routes>
   );
 };

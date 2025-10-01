@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FileText, Activity } from 'lucide-react';
+import { FileText, Activity, TrendingUp } from 'lucide-react';
 
 const LocalNavContainer = styled(motion.div)`
   position: fixed;
@@ -109,6 +109,11 @@ const PortfolioNavigation: React.FC = () => {
       path: '/portfolio/running', 
       label: '러닝 스케줄',
       icon: <Activity size={16} />
+    },
+    { 
+      path: '/portfolio/stock', 
+      label: '주식 알림',
+      icon: <TrendingUp size={16} />
     }
   ];
 

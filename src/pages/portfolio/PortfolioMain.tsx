@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { theme } from '../../theme';
-import { FileText, Activity } from 'lucide-react';
+import { FileText, Activity, TrendingUp } from 'lucide-react';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../components/shared/GlobalHeader';
@@ -123,6 +123,14 @@ const PortfolioMain: React.FC = () => {
       icon: <Activity size={24} />,
       path: '/portfolio/running',
       tags: ['React', 'API 연동', '풀스택', '개인프로젝트', '비동기처리', 'SpringBoot']
+    },
+    {
+      id: 'stock-alerts',
+      title: '주식 알림',
+      description: '보유 주식의 실시간 가격 정보를 확인하고 목표가 알림을 받을 수 있는 서비스입니다. 상승/하락 상황을 한눈에 파악할 수 있습니다.',
+      icon: <TrendingUp size={24} />,
+      path: '/portfolio/stock',
+      tags: ['React', 'API 연동', '실시간 데이터', '개인프로젝트', '금융 데이터', '알림 시스템']
     }
   ];
 
