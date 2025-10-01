@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { User, Code, Lightbulb, Heart, Globe, Award, GraduationCap, MapPin, Download, FileText, Briefcase, FolderOpen } from 'lucide-react';
+import { User, Code, Lightbulb, Heart, Globe, Award, GraduationCap, MapPin, Download, FileText, Briefcase, FolderOpen, ExternalLink } from 'lucide-react';
 
 const AboutSection = styled.section`
   padding: 6rem 0;
@@ -38,9 +38,9 @@ const SectionSubtitle = styled(motion.p)`
 
 const Content = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 0.8fr;
   gap: 4rem;
-  align-items: center;
+  align-items: start;
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     grid-template-columns: 1fr;
@@ -151,22 +151,20 @@ const FeatureDescription = styled.p`
 `;
 
 const DownloadSection = styled.div`
-  margin-top: 3rem;
   text-align: center;
 `;
 
 const DownloadTitle = styled(motion.h3)`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: ${props => props.theme.colors.text};
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `;
 
 const DownloadButtons = styled.div`
   display: flex;
-  gap: 1.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 const DownloadButton = styled(motion.a)`
@@ -200,6 +198,68 @@ const DownloadIcon = styled.div`
   justify-content: center;
 `;
 
+const ActionSectionsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+`;
+
+const PortfolioSection = styled.div`
+  text-align: center;
+`;
+
+const PortfolioTitle = styled(motion.h3)`
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: ${props => props.theme.colors.text};
+  margin-bottom: 1.5rem;
+`;
+
+const PortfolioButtons = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const PortfolioButton = styled(motion.a)`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
+  text-decoration: none;
+  border: 2px solid ${props => props.theme.colors.primary};
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: ${props => props.theme.gradients.primary};
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: ${props => props.theme.shadows.large};
+  }
+
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
+  }
+`;
+
+const PortfolioIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const About: React.FC = () => {
   const features = [
     {
@@ -221,6 +281,24 @@ const About: React.FC = () => {
       icon: <Heart size={20} />,
       title: '협업 중심',
       description: '팀원간 협업을 중요시하며, 업무 충돌 방지와 원활한 소통을 위한 문화를 만들어갑니다.'
+    }
+  ];
+
+  const portfolioProjects = [
+    {
+      name: '실무 포트폴리오',
+      url: '/front_portfolio_resume/portfolio/work',
+      icon: <Briefcase size={18} />
+    },
+    {
+      name: '주식 알림',
+      url: '/front_portfolio_resume/portfolio/stock',
+      icon: <ExternalLink size={18} />
+    },
+    {
+      name: '러닝 스케줄 날씨 알림',
+      url: '/front_portfolio_resume/portfolio/running',
+      icon: <ExternalLink size={18} />
     }
   ];
 
@@ -319,50 +397,36 @@ const About: React.FC = () => {
               </StatCard>
             </StatsContainer>
 
-            <DownloadSection>
-              <DownloadTitle
+            <PortfolioSection>
+              <PortfolioTitle
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.0 }}
+                transition={{ duration: 0.6, delay: 0.9 }}
                 viewport={{ once: true }}
               >
-                자료 다운로드
-              </DownloadTitle>
+                포트폴리오 페이지
+              </PortfolioTitle>
               
-              <DownloadButtons>
-                <DownloadButton
-                  href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서_250918.pdf`}
-                  download="김태성_이력서_경력기술서.pdf"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <DownloadIcon>
-                    <FileText size={18} />
-                  </DownloadIcon>
-                  이력&경력기술서 다운로드
-                </DownloadButton>
-                
-                <DownloadButton
-                  href={`${process.env.PUBLIC_URL}/프로젝트 포트폴리오_김태성.pdf`}
-                  download="김태성_실무포트폴리오.pdf"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 1.2 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <DownloadIcon>
-                    <FolderOpen size={18} />
-                  </DownloadIcon>
-                  실무 포트폴리오 다운로드
-                </DownloadButton>
-              </DownloadButtons>
-            </DownloadSection>
+              <PortfolioButtons>
+                {portfolioProjects.map((project, index) => (
+                  <PortfolioButton
+                    key={index}
+                    href={project.url}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.0 + (index * 0.1) }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <PortfolioIcon>
+                      {project.icon}
+                    </PortfolioIcon>
+                    {project.name}
+                  </PortfolioButton>
+                ))}
+              </PortfolioButtons>
+            </PortfolioSection>
 
           </TextContent>
 
@@ -384,6 +448,51 @@ const About: React.FC = () => {
                 </FeatureContent>
               </FeatureCard>
             ))}
+
+            <DownloadSection>
+              <DownloadTitle
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1.5 }}
+                viewport={{ once: true }}
+              >
+                자료 다운로드
+              </DownloadTitle>
+              
+              <DownloadButtons>
+                <DownloadButton
+                  href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서_250918.pdf`}
+                  download="김태성_이력서_경력기술서.pdf"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.6 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <DownloadIcon>
+                    <FileText size={18} />
+                  </DownloadIcon>
+                  이력&경력기술서 다운로드
+                </DownloadButton>
+                
+                <DownloadButton
+                  href={`${process.env.PUBLIC_URL}/프로젝트 포트폴리오_김태성.pdf`}
+                  download="김태성_실무포트폴리오.pdf"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.7 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <DownloadIcon>
+                    <FolderOpen size={18} />
+                  </DownloadIcon>
+                  실무 포트폴리오 다운로드
+                </DownloadButton>
+              </DownloadButtons>
+            </DownloadSection>
           </VisualContainer>
         </Content>
       </Container>

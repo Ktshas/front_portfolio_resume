@@ -117,6 +117,14 @@ const PortfolioMain: React.FC = () => {
       tags: ['Go', 'Python', 'Django', 'MSA설계', '풀스택', '성능최적화', '실무경험']
     },
     {
+      id: 'stock-alerts',
+      title: '주식 알림',
+      description: '보유 주식의 실시간 가격 정보를 확인하고 설정한 목표가에 도달하면 카카오톡 메세지를 보냅니다.',
+      icon: <TrendingUp size={24} />,
+      path: '/portfolio/stock',
+      tags: ['React', 'API 연동', '실시간 데이터', '개인프로젝트', '금융 데이터', '알림 시스템']
+    }
+    {
       id: 'running-schedule',
       title: '러닝 스케줄 날씨 알림',
       description: '러닝 스케줄을 기록하고 기상청 API와 연동하여 러닝 스케줄에 우천 상태 변경이 있으면 알림을 주는 서비스입니다.',
@@ -124,14 +132,6 @@ const PortfolioMain: React.FC = () => {
       path: '/portfolio/running',
       tags: ['React', 'API 연동', '풀스택', '개인프로젝트', '비동기처리', 'SpringBoot']
     },
-    {
-      id: 'stock-alerts',
-      title: '주식 알림',
-      description: '보유 주식의 실시간 가격 정보를 확인하고 목표가 알림을 받을 수 있는 서비스입니다. 상승/하락 상황을 한눈에 파악할 수 있습니다.',
-      icon: <TrendingUp size={24} />,
-      path: '/portfolio/stock',
-      tags: ['React', 'API 연동', '실시간 데이터', '개인프로젝트', '금융 데이터', '알림 시스템']
-    }
   ];
 
   return (
