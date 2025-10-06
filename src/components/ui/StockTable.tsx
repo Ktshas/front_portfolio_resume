@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Minus, HelpCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, HelpCircle, ArrowUp, ArrowDown } from 'lucide-react';
 import { StockData } from '../../types/stock';
 
 const StockTableContainer = styled.div`
@@ -227,10 +227,20 @@ const TargetPrice = styled.div<{ status: 'ACHIEVED_BUY' | 'ACHIEVED_SELL' | 'NOT
   }};
   font-size: 1rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     font-size: 0.9rem;
   }
+`;
+
+const DirectionArrow = styled.div<{ direction: 'UP' | 'DOWN' }>`
+  color: ${props => props.direction === 'UP' ? '#ef4444' : '#3b82f6'};
+  display: flex;
+  align-items: center;
 `;
 
 
@@ -327,7 +337,14 @@ const StockTable: React.FC<StockTableProps> = ({ stocks }) => {
                 <span>({stock.fluctuationsRatio}%)</span>
               </PriceChange>
               
-              <TargetPrice status={targetStatus}>{stock.targetPrice}원</TargetPrice>
+              <TargetPrice status={targetStatus}>
+                {stock.targetPriceDirection && (
+                  <DirectionArrow direction={stock.targetPriceDirection}>
+                    {stock.targetPriceDirection === 'UP' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                  </DirectionArrow>
+                )}
+                {stock.targetPrice}원
+              </TargetPrice>
             </TableRow>
           );
         })}

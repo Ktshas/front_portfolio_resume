@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, Minus, HelpCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, HelpCircle, ArrowUp, ArrowDown } from 'lucide-react';
 import { CryptoData } from '../../types/crypto';
 
 const CryptoTableContainer = styled.div`
@@ -229,10 +229,20 @@ const TargetPrice = styled.div<{ status: 'ACHIEVED_BUY' | 'ACHIEVED_SELL' | 'NOT
   }};
   font-size: 1rem;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
 
   @media (max-width: ${props => props.theme.breakpoints.mobile}) {
     font-size: 0.9rem;
   }
+`;
+
+const DirectionArrow = styled.div<{ direction: 'UP' | 'DOWN' }>`
+  color: ${props => props.direction === 'UP' ? '#ef4444' : '#3b82f6'};
+  display: flex;
+  align-items: center;
 `;
 
 interface CryptoTableProps {
@@ -341,6 +351,11 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ cryptos }) => {
               </PriceChange>
               
               <TargetPrice status={targetStatus}>
+                {crypto.targetPriceDirection && (
+                  <DirectionArrow direction={crypto.targetPriceDirection}>
+                    {crypto.targetPriceDirection === 'UP' ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
+                  </DirectionArrow>
+                )}
                 {crypto.targetPrice ? `${crypto.targetPrice}원` : '목표가 없음'}
               </TargetPrice>
             </TableRow>
