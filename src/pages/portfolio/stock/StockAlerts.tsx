@@ -5,8 +5,11 @@ import { motion } from 'framer-motion';
 import { RefreshCw, AlertCircle } from 'lucide-react';
 import { theme } from '../../../theme';
 import { StockData } from '../../../types/stock';
+import { CryptoData } from '../../../types/crypto';
 import { stockApi } from '../../../services/stockApi';
+import { cryptoApi } from '../../../services/cryptoApi';
 import StockTable from '../../../components/ui/StockTable';
+import CryptoTable from '../../../components/ui/CryptoTable';
 import GlobalHeader from '../../../components/shared/GlobalHeader';
 
 const StockAlertsContainer = styled.div`
@@ -90,8 +93,11 @@ const RefreshButton = styled(motion.button)`
 
 const StockAlerts: React.FC = () => {
   const [stocks, setStocks] = useState<StockData[]>([]);
+  const [cryptos, setCryptos] = useState<CryptoData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cryptoLoading, setCryptoLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cryptoError, setCryptoError] = useState<string | null>(null);
 
   const fetchStocks = async () => {
     try {
@@ -112,12 +118,33 @@ const StockAlerts: React.FC = () => {
     }
   };
 
+  const fetchCryptos = async () => {
+    try {
+      setCryptoLoading(true);
+      setCryptoError(null);
+      const response = await cryptoApi.getCryptos();
+      
+      if (response.success) {
+        setCryptos(response.data);
+      } else {
+        setCryptoError(response.message || '가상화폐 데이터를 불러오는데 실패했습니다.');
+      }
+    } catch (err) {
+      setCryptoError('가상화폐 데이터를 불러오는데 실패했습니다. 네트워크 연결을 확인해주세요.');
+      console.error('가상화폐 데이터 조회 오류:', err);
+    } finally {
+      setCryptoLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchStocks();
+    fetchCryptos();
   }, []);
 
   const handleRefresh = () => {
     fetchStocks();
+    fetchCryptos();
   };
 
   return (
@@ -125,7 +152,7 @@ const StockAlerts: React.FC = () => {
       <div>
         <GlobalHeader />
         <StockAlertsContainer>
-          <PageTitle>내 주식 알림</PageTitle>
+          <PageTitle>내 투자자산 알림</PageTitle>
           
           <ContentContainer>
             {loading ? (
@@ -159,6 +186,35 @@ const StockAlerts: React.FC = () => {
                 transition={{ duration: 0.5 }}
               >
                 <StockTable stocks={stocks} />
+                
+                {/* 가상화폐 테이블 */}
+                {cryptoLoading ? (
+                  <LoadingContainer>
+                    <LoadingSpinner
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                    <p>가상화폐 데이터를 불러오는 중...</p>
+                  </LoadingContainer>
+                ) : cryptoError ? (
+                  <ErrorContainer>
+                    <ErrorIcon>
+                      <AlertCircle size={48} />
+                    </ErrorIcon>
+                    <h3>가상화폐 데이터 로드 실패</h3>
+                    <p>{cryptoError}</p>
+                    <RefreshButton
+                      onClick={fetchCryptos}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <RefreshCw size={16} />
+                      다시 시도
+                    </RefreshButton>
+                  </ErrorContainer>
+                ) : (
+                  <CryptoTable cryptos={cryptos} />
+                )}
                 
                 <motion.div
                   style={{ textAlign: 'center', marginTop: '2rem' }}

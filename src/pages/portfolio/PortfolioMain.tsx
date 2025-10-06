@@ -118,8 +118,8 @@ const PortfolioMain: React.FC = () => {
     },
     {
       id: 'stock-alerts',
-      title: '주식 알림',
-      description: '보유 주식의 실시간 가격 정보를 확인하고 설정한 목표가에 도달하면 카카오톡 메세지를 보냅니다.',
+      title: '투자자산 알림',
+      description: '보유 주식, 가상화폐의 실시간 가격 정보를 확인하고 설정한 목표가에 도달하면 카카오톡 메세지를 보냅니다.',
       icon: <TrendingUp size={24} />,
       path: '/portfolio/stock',
       tags: ['React', 'API 연동', '실시간 데이터', '개인프로젝트', '금융 데이터', '알림 시스템']

@@ -291,7 +291,7 @@ const About: React.FC = () => {
       icon: <Briefcase size={18} />
     },
     {
-      name: '주식 알림',
+      name: '투자자산 알림',
       url: '/front_portfolio_resume/portfolio/stock',
       icon: <ExternalLink size={18} />
     },
