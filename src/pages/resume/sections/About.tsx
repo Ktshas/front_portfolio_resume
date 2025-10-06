@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { User, Code, Lightbulb, Heart, Globe, Award, GraduationCap, MapPin, Download, FileText, Briefcase, FolderOpen, ExternalLink } from 'lucide-react';
+import { User, Code, Lightbulb, Heart, Globe, Award, GraduationCap, MapPin, Download, FileText, Briefcase, FolderOpen, ExternalLink, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AboutSection = styled.section`
   padding: 6rem 0;
@@ -260,7 +260,271 @@ const PortfolioIcon = styled.div`
   justify-content: center;
 `;
 
+// 포트폴리오 미리보기 버튼 스타일
+const PortfolioTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+`;
+
+const PreviewButton = styled(motion.button)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: ${props => props.theme.gradients.primary};
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  }
+`;
+
+// 모달 스타일
+const ModalOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+`;
+
+const ModalContent = styled(motion.div)`
+  background: ${props => props.theme.colors.surface};
+  border-radius: 1rem;
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 800px;
+  height: 700px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+`;
+
+const ModalHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid ${props => props.theme.colors.border};
+  background: ${props => props.theme.colors.background};
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: ${props => props.theme.colors.text};
+  margin: 0;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  color: ${props => props.theme.colors.textSecondary};
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.theme.colors.border};
+    color: ${props => props.theme.colors.text};
+  }
+`;
+
+const SlideContainer = styled.div`
+  position: relative;
+  height: calc(100% - 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+`;
+
+const SlideContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  width: 100%;
+  height: 100%;
+`;
+
+const SlideTextContainer = styled.div`
+  text-align: center;
+  flex-shrink: 0;
+`;
+
+const SlideTitle = styled.h4`
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: ${props => props.theme.colors.text};
+  margin: 0 0 0.5rem 0;
+`;
+
+const SlideSubtitle = styled.p`
+  font-size: 1rem;
+  color: ${props => props.theme.colors.textSecondary};
+  margin: 0;
+  line-height: 1.5;
+`;
+
+const SlideImageContainer = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+`;
+
+const SlideImage = styled.img`
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
+`;
+
+const SlideNavigation = styled.div`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  &.prev {
+    left: 1rem;
+  }
+
+  &.next {
+    right: 1rem;
+  }
+`;
+
+const SlideIndicator = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+`;
+
+const IndicatorDot = styled.div<{ active: boolean }>`
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: ${props => props.active ? props.theme.colors.primary : props.theme.colors.border};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.theme.colors.primary};
+  }
+`;
+
 const About: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  const portfolioImages = [
+    {
+      title: '실무 포트폴리오',
+      images: [
+        {
+          image: '/portfolio-work-1.png',
+          title: '실무 포트폴리오',
+          subtitle: 'Golang 프로젝트 소개'
+        },
+        {
+          image: '/portfolio-work-2.png',
+          title: '실무 포트폴리오',
+          subtitle: 'Golang 셋탑 원격관제 시스템 MSA 설계'
+        },
+        {
+          image: '/portfolio-work-3.png',
+          title: '실무 포트폴리오',
+          subtitle: 'Python 특허, 상표검색 시스템'
+        },
+        {
+          image: '/portfolio-work-4.png',
+          title: '실무 포트폴리오',
+          subtitle: 'Python 전자계약 사이트'
+        },
+        {
+          image: '/portfolio-work-5.png',
+          title: '실무 포트폴리오',
+          subtitle: 'Python PC 포렌식 관리 서비스'
+        }
+      ]
+    },
+    {
+      title: '투자자산 알림',
+      images: [
+        {
+          image: '/portfolio-stock-1.png',
+          title: '투자자산 알림',
+          subtitle: '내 관심 주식/가상화폐 목표가 도달 자동알림 시스템'
+        }
+      ]
+    }
+  ];
+
+  const allImages = portfolioImages.flatMap(portfolio => 
+    portfolio.images.map(imageData => ({ ...portfolio, ...imageData }))
+  );
+
+  const openModal = () => {
+    setIsModalOpen(true);
+    setCurrentSlide(0);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCurrentSlide(0);
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % allImages.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + allImages.length) % allImages.length);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
+
   const features = [
     {
       icon: <Code size={20} />,
@@ -398,14 +662,28 @@ const About: React.FC = () => {
             </StatsContainer>
 
             <PortfolioSection>
-              <PortfolioTitle
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.9 }}
-                viewport={{ once: true }}
-              >
-                포트폴리오 페이지
-              </PortfolioTitle>
+              <PortfolioTitleContainer>
+                <PortfolioTitle
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                  viewport={{ once: true }}
+                >
+                  포트폴리오 페이지
+                </PortfolioTitle>
+                <PreviewButton
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.0 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={openModal}
+                >
+                  <Eye size={16} />
+                  미리보기
+                </PreviewButton>
+              </PortfolioTitleContainer>
               
               <PortfolioButtons>
                 {portfolioProjects.map((project, index) => (
@@ -496,6 +774,70 @@ const About: React.FC = () => {
           </VisualContainer>
         </Content>
       </Container>
+
+      {/* 포트폴리오 미리보기 모달 */}
+      {isModalOpen && (
+        <ModalOverlay
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={closeModal}
+        >
+          <ModalContent
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ModalHeader>
+              <ModalTitle>
+                포트폴리오 미리보기 - {currentSlide + 1} / {allImages.length}
+              </ModalTitle>
+              <CloseButton onClick={closeModal}>
+                <X size={20} />
+              </CloseButton>
+            </ModalHeader>
+            
+            <SlideContainer>
+              <SlideContent>
+                <SlideTextContainer>
+                  <SlideTitle>{allImages[currentSlide]?.title}</SlideTitle>
+                  <SlideSubtitle>{allImages[currentSlide]?.subtitle}</SlideSubtitle>
+                </SlideTextContainer>
+                
+                <SlideImageContainer>
+                  <SlideImage 
+                    src={`${process.env.PUBLIC_URL}${allImages[currentSlide]?.image}`}
+                    alt={allImages[currentSlide]?.title}
+                    onError={(e) => {
+                      // 이미지 로드 실패 시 기본 이미지 표시
+                      (e.target as HTMLImageElement).src = `${process.env.PUBLIC_URL}/logo512.png`;
+                    }}
+                  />
+                </SlideImageContainer>
+              </SlideContent>
+              
+              <SlideNavigation className="prev" onClick={prevSlide}>
+                <ChevronLeft size={20} />
+              </SlideNavigation>
+              
+              <SlideNavigation className="next" onClick={nextSlide}>
+                <ChevronRight size={20} />
+              </SlideNavigation>
+              
+              <SlideIndicator>
+                {allImages.map((_, index) => (
+                  <IndicatorDot
+                    key={index}
+                    active={index === currentSlide}
+                    onClick={() => goToSlide(index)}
+                  />
+                ))}
+              </SlideIndicator>
+            </SlideContainer>
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </AboutSection>
   );
 };
