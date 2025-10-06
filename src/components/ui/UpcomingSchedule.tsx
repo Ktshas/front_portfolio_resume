@@ -267,21 +267,22 @@ const UpcomingSchedule: React.FC<UpcomingScheduleProps> = ({ schedules }) => {
   // 날씨 정보 가져오기 (API에서 weatherInfo가 null인 경우 처리)
   const getWeatherInfo = (date: string, time: string) => {
     // 상세 API 호출이 완료되었는지 확인
-    if (hasDetailedInfo && upcomingSchedule) {
-      if (upcomingSchedule.weatherInfo) {
-        // API에서 weatherInfo가 있는 경우 해당 정보 사용
-        console.log('API weatherInfo 사용:', upcomingSchedule.weatherInfo);
-        return upcomingSchedule.weatherInfo;
-      } else {
-        // API에서 weatherInfo가 null인 경우 null 반환
-        console.log('API에서 weatherInfo가 null, null 반환');
-        return null;
-      }
-    } else {
-      // 상세 API 호출이 아직 완료되지 않은 경우 mock 데이터 사용
-      console.log('상세 API 호출 미완료, mock 데이터 사용:', date, time);
-      return getWeatherForTime(date, time);
-    }
+    // if (hasDetailedInfo && upcomingSchedule) {
+    //   if (upcomingSchedule.weatherInfo) {
+    //     // API에서 weatherInfo가 있는 경우 해당 정보 사용
+    //     console.log('API weatherInfo 사용:', upcomingSchedule.weatherInfo);
+    //     return upcomingSchedule.weatherInfo;
+    //   } else {
+    //     // API에서 weatherInfo가 null인 경우 null 반환
+    //     console.log('API에서 weatherInfo가 null, null 반환');
+    //     return null;
+    //   }
+    // } else {
+    //   // 상세 API 호출이 아직 완료되지 않은 경우 mock 데이터 사용
+    //   console.log('상세 API 호출 미완료, mock 데이터 사용:', date, time);
+    //   return getWeatherForTime(date, time);
+    // }
+    return getWeatherForTime(date, time);
   };
 
   const startWeather = getWeatherInfo(upcomingSchedule.date, upcomingSchedule.startTime);

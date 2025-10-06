@@ -236,7 +236,7 @@ const RunningSchedule: React.FC = () => {
               <WarningIcon>
                 <AlertTriangle size={20} />
               </WarningIcon>
-              데이터센터 화재로 인해 날씨 API를 습득할 수 없습니다
+              데이터센터 화재로 인해 날씨데이터를 목업데이터로 대신하고 있습니다.
             </WeatherApiWarning>
             
             <UpcomingSchedule schedules={schedules} />
