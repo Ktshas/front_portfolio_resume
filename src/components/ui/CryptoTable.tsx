@@ -157,6 +157,13 @@ const TableRow = styled(motion.div)`
 const CryptoInfo = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+`;
+
+const CryptoIcon = styled.img`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
 `;
 
 const CryptoName = styled.div`
@@ -291,6 +298,15 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ cryptos }) => {
     return numRate.toFixed(2);
   };
 
+  // 가상화폐 아이콘 가져오기 함수
+  const getCryptoIcon = (cryptoCode: string) => {
+    const code = cryptoCode.toLowerCase();
+    if (code.includes('btc')) return `${process.env.PUBLIC_URL}/icon_btc_256.png`;
+    if (code.includes('eth')) return `${process.env.PUBLIC_URL}/icon_eth_256.png`;
+    if (code.includes('xrp')) return `${process.env.PUBLIC_URL}/icon_xrp_256.png`;
+    return null; // 기본 아이콘이 없는 경우
+  };
+
   return (
     <CryptoTableContainer>
       <TableHeader>
@@ -335,6 +351,12 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ cryptos }) => {
               whileHover={{ scale: 1.01 }}
             >
               <CryptoInfo>
+                {getCryptoIcon(crypto.cryptoCode) && (
+                  <CryptoIcon 
+                    src={getCryptoIcon(crypto.cryptoCode)!} 
+                    alt={crypto.cryptoName}
+                  />
+                )}
                 <CryptoName>{crypto.cryptoName}</CryptoName>
               </CryptoInfo>
               
