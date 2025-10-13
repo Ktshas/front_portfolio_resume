@@ -157,8 +157,9 @@ const GlobalHeader: React.FC = () => {
   }, []);
 
   const pageItems = [
-    { path: '/resume', label: 'Resume' },
-    { path: '/portfolio', label: 'Portfolio' },
+    { path: '/resume', label: '이력서(자기소개)' },
+    { path: '/portfolio', label: '포트폴리오' },
+    { path: '/career', label: '경력기술서' },
     { path: '/contact', label: 'Contact' },
   ];
 
