@@ -6,6 +6,7 @@ import './App.css';
 import Resume from './pages/resume/Resume';
 import Portfolio from './pages/portfolio/Portfolio';
 import Contact from './pages/contact/Contact';
+import ExperienceDetail from './pages/experience/ExperienceDetail';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/resume" element={<Resume />} />
           <Route path="/portfolio/*" element={<Portfolio />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/experience" element={<ExperienceDetail />} />
         </Routes>
       </div>
     </Router>
