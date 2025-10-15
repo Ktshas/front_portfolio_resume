@@ -740,8 +740,8 @@ const About: React.FC = () => {
               
               <DownloadButtons>
                 <DownloadButton
-                  href={`${process.env.PUBLIC_URL}/김태성_이력서_경력기술서.pdf`}
-                  download="김태성_이력서_경력기술서.pdf"
+                  href={`${process.env.PUBLIC_URL}/김태성_이력서.pdf`}
+                  download="김태성_이력서.pdf"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.6 }}
@@ -752,7 +752,7 @@ const About: React.FC = () => {
                   <DownloadIcon>
                     <FileText size={18} />
                   </DownloadIcon>
-                  이력&경력기술서 다운로드
+                  이력서 다운로드
                 </DownloadButton>
                 
                 <DownloadButton
