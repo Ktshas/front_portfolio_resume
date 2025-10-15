@@ -6,14 +6,14 @@ import { theme } from '../../theme';
 import GlobalHeader from '../../components/shared/GlobalHeader';
 
 // 섹션 컴포넌트들 import
-import GaonGroupCase from './sections/GaonGroupCase';
+import ExperienceCase from './ExperienceCase';
 
 const ExperienceDetail: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div>
         <GlobalHeader />
-        <GaonGroupCase />
+        <ExperienceCase />
       </div>
     </ThemeProvider>
   );

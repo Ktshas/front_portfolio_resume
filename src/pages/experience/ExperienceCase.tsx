@@ -181,7 +181,7 @@ const TechnicalDescription = styled.p`
   text-align: left;
 `;
 
-const GaonGroupCase: React.FC = () => {
+const ExperienceCase: React.FC = () => {
   return (
     <ExperienceSection id="experience-detail">
       <Container>
@@ -452,4 +452,4 @@ const GaonGroupCase: React.FC = () => {
   );
 };
 
-export default GaonGroupCase;
+export default ExperienceCase;
