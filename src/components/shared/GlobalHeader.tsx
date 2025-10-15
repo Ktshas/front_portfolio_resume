@@ -31,7 +31,7 @@ const Logo = styled(motion.div)`
   gap: 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
-  color: ${props => props.theme.colors.text};
+  color: ${props => props.theme.colors.primary};
   text-decoration: none;
   cursor: pointer;
 `;
@@ -171,8 +171,8 @@ const GlobalHeader: React.FC = () => {
         transition={{ duration: 0.5 }}
         style={{
           background: isScrolled 
-            ? 'rgba(15, 15, 35, 0.95)' 
-            : 'rgba(15, 15, 35, 0.8)'
+            ? 'rgba(255, 255, 255, 0.95)' 
+            : 'rgba(255, 255, 255, 0.8)'
         }}
       >
         <Nav>

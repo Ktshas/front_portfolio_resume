@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { User, Code, Lightbulb, Heart, Globe, Award, GraduationCap, MapPin, Download, FileText, Briefcase, FolderOpen, ExternalLink, Eye, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const AboutSection = styled.section`
@@ -260,6 +261,33 @@ const PortfolioIcon = styled.div`
   justify-content: center;
 `;
 
+// 경력기술서 섹션 스타일
+const ExperienceButton = styled(motion.button)`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: ${props => props.theme.gradients.primary};
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+  }
+`;
+
+const ExperienceIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 // 포트폴리오 미리보기 버튼 스타일
 const PortfolioTitleContainer = styled.div`
   display: flex;
@@ -453,6 +481,7 @@ const IndicatorDot = styled.div<{ active: boolean }>`
 `;
 
 const About: React.FC = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
@@ -594,6 +623,7 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
+              style={{ textAlign: 'left' }}
             >
               안녕하세요! 저는 <Highlight>13년 차 풀스택 개발자이자 시스템 설계자</Highlight>입니다. 
               다양한 산업군에서 백엔드·프론트엔드 프로젝트를 경험하였으며, 언어·프레임워크·데이터베이스에 구애받지 않고 속도·안정성·확장성을 모두 만족시키는 시스템을 설계하고 구현해왔습니다.
@@ -604,6 +634,7 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
+              style={{ textAlign: 'left' }}
             >
               일본 현지에서 <Highlight>7년간 근무</Highlight>하며 네이티브 수준의 비즈니스 일본어 능력을 갖추었고, 여전히 비즈니스 레벨의 일본어 능력을 유지하고 있습니다. 
               최근에는 AI를 적극 활용하여 업무, 학습 속도가 폭발적으로 향상되어 경험이 거의 없던 스프링 부트나 리액트 개발에서 AI를 활용하지 않는 개발자들과 비교해 더 높은 퍼포먼스와 완성물을 낼 수 있게 되었습니다.
@@ -614,6 +645,7 @@ const About: React.FC = () => {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
+              style={{ textAlign: 'left' }}
             >
               팀원간 협업을 중요시하며 실현 방법으로는 진행할 업무내용을 사전 공유하고, 팀원들 또한 진행할 업무에 대해 팀 전체에 공유하고 진행하는 문화를 만들기 위해 노력합니다.
               이렇게 하므로써 동일한 업무를 여러 사람이 진행하거나, 관리자가 모르는 업무를 팀원이 혼자 진행하여 관리되지 않는 타스크가 발생하는 일을 줄여갈 수 있습니다.
@@ -664,6 +696,28 @@ const About: React.FC = () => {
 
             <PortfolioSection>
               <PortfolioTitleContainer>
+                <PortfolioTitle
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                  viewport={{ once: true }}
+                >
+                  경력기술서 페이지
+                </PortfolioTitle>
+                <ExperienceButton
+                  onClick={() => navigate('/experience')}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 1.5 }}
+                  viewport={{ once: true }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ExperienceIcon>
+                    <Briefcase size={18} />
+                  </ExperienceIcon>
+                  바로가기
+                </ExperienceButton>
                 <PortfolioTitle
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
