@@ -215,7 +215,6 @@ const GaonGroupCase: React.FC = () => {
             </CompanyIcon>
             <CompanyInfo>
               <CompanyName>가온그룹</CompanyName>
-              <CompanyPeriod>2023.11 - 2025.03</CompanyPeriod>
             </CompanyInfo>
           </CompanyHeader>
 
@@ -320,6 +319,133 @@ const GaonGroupCase: React.FC = () => {
             </ImprovementDescription>
           </ImprovementSection>
 
+        </CaseStudyCard>
+
+        {/* 리걸테크 사례 */}
+        <CaseStudyCard
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          <CompanyHeader>
+            <CompanyIcon>
+              <Building2 size={24} />
+            </CompanyIcon>
+            <CompanyInfo>
+              <CompanyName>리걸테크</CompanyName>
+            </CompanyInfo>
+          </CompanyHeader>
+
+          <TechStack>
+            <TechStackTitle>
+              <Code size={18} />
+              기술 스택
+            </TechStackTitle>
+            <TechTags>
+              <TechTag>Python</TechTag>
+              <TechTag>Django</TechTag>
+              <TechTag>Elasticsearch</TechTag>
+              <TechTag>XSL</TechTag>
+              <TechTag>MySQL</TechTag>
+            </TechTags>
+          </TechStack>
+
+          <ProblemSection>
+            <SectionTitleStyled variant="warning">
+              <AlertTriangle size={18} />
+              전자계약 시스템 개발 사례
+            </SectionTitleStyled>
+            <ProblemDescription>
+              전자계약 시스템에서 핵심이 되는 계약서 작성, 수정, 서명, 상태변경, 이력관리 등 기능 개발을 담당했습니다.<br/>
+              중요한건 계약서를 수정/삭제 하거나, 진행상태를 변경해도 되는 상태의 정리, 시스템에 가입되지 않은 사용자의 서명페이지 등의 명확한 정의가 중요했습니다.<br/>
+              계약의 진행 상태가 이전상태로 돌아가는게 가능하기 때문에 꽤 복잡할 수 있게 되었고, 상태별 또는 상태를 되돌림에 따른 버그가 발생하기 쉬운 구성이였습니다.
+            </ProblemDescription>
+          </ProblemSection>
+
+          <ImprovementSection>
+            <SectionTitleStyled variant="success">
+              <CheckCircle size={18} />
+              대처 방법
+            </SectionTitleStyled>
+            <ImprovementDescription>
+              명확한 기능정의와 기획이 되지 않으면 어디까지가 의도된 처리이고 뭐가 버그인지 알 수 없는 시스템이 될 것이라 판단했습니다.<br/>
+              시스템 설계 단계에서 기획자와 꾸준하게 협의했고, 개발 진행간에도 기획적 문제나 모순이 발견되면 바로 기획자와 협의해서 수정하며 진행했습니다.<br/>
+              계약서 작성 프로세스에 대해 모든 상태별 가능/불가능한 처리, 상태 변경시 발생하는 모든 이벤트에 대해 명확하게 정의하고 진행했습니다.<br/>
+              <b>당연한 얘기를 적은 것 같지만, 이 당연한 프로세스가 이뤄지지 않고 개발되는 시스템들이 정말 많습니다.</b><br/>
+              그럴 때마다 기획서가 없어서 이게 버그인지 성능인지 모르겠다, 디버깅이 어려워서 유지보수가 어렵다는 이유로 매번 시스템을 다시만드는 경우를 너무 많이 봤습니다.<br/>
+              그렇기에 저는 이 프로젝트가 가장 완성도높고 만족스러운 결과물을 만들어 낼 수 있었고, 시스템 완성도가 떨어지고 잘 돌아가지 않는 조직의 문제를 비교할 수 있는 가장 좋은 프로젝트로 기억하고 있습니다.
+            </ImprovementDescription>
+          </ImprovementSection>
+        </CaseStudyCard>
+
+        {/* 시스템 운영 비교 사례 */}
+        <CaseStudyCard
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <CompanyHeader>
+            <CompanyIcon>
+              <Building2 size={24} />
+            </CompanyIcon>
+            <CompanyInfo>
+              <CompanyName>잘 운영되는 시스템 & 잘 운영되지 않는 시스템과 조직에 대한 비교 </CompanyName>
+            </CompanyInfo>
+          </CompanyHeader>
+
+          <TechStack>
+            <TechStackTitle>
+              <Code size={18} />
+              분석 대상 회사
+            </TechStackTitle>
+            <TechTags>
+              <TechTag>가온그룹</TechTag>
+              <TechTag>리걸테크</TechTag>
+              <TechTag>그로테크</TechTag>
+              <TechTag>어메스</TechTag>
+              <TechTag>리스크제로</TechTag>
+            </TechTags>
+          </TechStack>
+
+          <ProblemSection>
+            <SectionTitleStyled variant="warning">
+              <AlertTriangle size={18} />
+              패치 때마다 버그발생, 사이드이펙트 발생하는 시스템과 조직의 문제.
+            </SectionTitleStyled>
+            <ProblemDescription>
+              어메스와 리스크제로에서 경험한 문제점은 사람이 바뀔 때마다 "기존 시스템의 유지보수가 어렵다, 퀄리티가 떨어진다, 기획서가 없어서 버그인지 의도된 기능인지 모르겠다"는 이유로 시스템을 새로 만들려고 하는 상황이 반복되는 것이었습니다.<br/>
+              그러나 시스템을 다시 만들고 나서도 결국 아무것도 개선되지 않고 동일한 문제가 반복해서 발생되고 있었습니다.<br/>
+              이 두곳은 몇가지 공통점이 있었습니다.<br/>
+              • 최소한의 기능정의, 기획서조차 없이 개발한다.<br/>
+              • 시간 리소스가 부족해서 다시 만드는 상황에서 조차 기능정의를 제대로 하지 않고 만든다.<br/>
+              • 개발팀의 인원 구조에 문제가 있다. 리드개발자 아래에 중간급 개발자 없이 시니어 개발자들만 존재하고, 리드개발자는 개발 업무보다 다른 업무들로 더 바쁘다.<br/>
+              • 인적리소스, 구조, 시간리소스의 절대적인 부족이 근본적인 원인이나 이것을 개발론이나 프로젝트 관리방법을 통해 해결할 수 있다 생각하여 계속 새로운것을 시도하나 그것이 더 많은 리소스 낭비를 유발하여 악순환 발생.<br/>
+            </ProblemDescription>
+          </ProblemSection>
+
+          <ImprovementSection>
+            <SectionTitleStyled variant="success">
+              <CheckCircle size={18} />
+              잘 운영되는 시스템의 특징과 그로테크 문제 해결 사례
+            </SectionTitleStyled>
+            <ImprovementDescription>
+              <strong>잘 운영되는 시스템 (가온그룹, 리걸테크):</strong><br/>
+              • 기획서를 명확하게 작성하고 일을 진행, 가온그룹은 문서화가 잘 되어있지 않았지만 내가 근무하면서 설계서를 작성하고 일을 진행하는 문화를 만듦<br/>
+              • 개발자 개개인이 전부 중급 이상으로 프로그램 수정 시 영향범위를 충분히 파악할 수 있고, 필요할 때 동료들과 상의할 수 있는 역량을 갖춤<br/>
+
+              <strong>그로테크 문제 해결 사례:</strong><br/>
+              그로테크는 초기에 어메스, 리스크제로와 유사한 문제를 가지고 있었습니다. 가상화폐 거래소 시스템이 복잡하게 얽혀있고, 기존 개발자들도 시스템을 이해하지 못하고 있는 상황이었습니다.<br/>
+              팀의 개발자 구성도, 최고급 개발자가 팀장을 하고있고, 그 아래에 주니어급 개발자만 두명이 있었습니다.<br/>
+              단, 이곳은 해야 할 일에대한 사전 문서작업이 매우 잘 이뤄지고 있었고, 문제는 그걸 팀장이 해야해서 팀장은 개발에 오롯이 집중할 수 없고 격무에 시달리고, 주니어들의 산출물은 배포때마다 버그를 발생시키고 있었습니다.<br/>
+              제가 입사하고 두달정도 바쁜 프로젝트를 겪고 난 후에, 어느정도 시스템 구조를 파악하게 되었고. 팀장으로 부터 PL 업무를 해달라는 요청을 받았습니다.<br/>
+              팀장은 고객으로 부터 오는 여러개의 요건들을 나눠서 저에게 분배하고 저는 각 요건들에 따른 시스템 영향범위를 고려하여 상세설계까지 마친 뒤, 주니어 개발자들에게 개발 업무를 분배했습니다.<br/>
+              주니어들의 역량을 고려하여, 상세설계를 디테일하게 했기때문에 산출물의 퀄리티가 좋아졌고, 규모가 작았기 때문에 모든 커밋된 코드들은 제가 전부 리뷰했습니다.<br/>
+              시스템이 코드링크 방식으로 화이트라벨을 많이 운영하고 있어서 사이드 이펙트 위험이 정말 높은 구성이였지만, 제가 중간급 개발자로 주니어들을 리딩하고 나서부터 패치후 버그나 사이드이펙트 발생이 현저하게 줄었습니다.<br/>
+              팀장 또한 프로젝트 관리 외에 본인의 개발업무에 집중할 수 있게되었고 업무부담을 많이 줄일 수 있게 되었습니다.
+            </ImprovementDescription>
+          </ImprovementSection>
         </CaseStudyCard>
       </Container>
     </ExperienceSection>
