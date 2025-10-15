@@ -106,14 +106,14 @@ const PortfolioNavigation: React.FC = () => {
       icon: <FileText size={16} />
     },
     { 
+      path: '/portfolio/stock', 
+      label: '내 투자 자산',
+      icon: <TrendingUp size={16} />
+    },
+    { 
       path: '/portfolio/running', 
       label: '러닝 스케줄',
       icon: <Activity size={16} />
-    },
-    { 
-      path: '/portfolio/stock', 
-      label: '주식 알림',
-      icon: <TrendingUp size={16} />
     }
   ];
 

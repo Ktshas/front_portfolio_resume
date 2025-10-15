@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { theme } from '../../theme';
-import { FileText, Activity, TrendingUp } from 'lucide-react';
+import { FileText, Activity, TrendingUp, Bell } from 'lucide-react';
 
 // 공통 컴포넌트들 import
 import GlobalHeader from '../../components/shared/GlobalHeader';
@@ -105,6 +105,38 @@ const Tag = styled.span`
   font-weight: 500;
 `;
 
+const ServiceNotice = styled(motion.div)`
+  max-width: 1200px;
+  margin: 0 auto 2rem auto;
+  padding: 1rem 2rem;
+  background: ${props => props.theme.colors.surface};
+  border: 1px solid ${props => props.theme.colors.border};
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: ${props => props.theme.shadows.medium};
+`;
+
+const NoticeIcon = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+`;
+
+const NoticeText = styled.p`
+  color: ${props => props.theme.colors.textSecondary};
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+`;
+
 
 const PortfolioMain: React.FC = () => {
   const portfolioSections = [
@@ -141,6 +173,16 @@ const PortfolioMain: React.FC = () => {
         <PortfolioContainer>
           <PortfolioTitle>프로젝트 포트폴리오</PortfolioTitle>
           
+          <ServiceNotice
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <NoticeIcon>
+              <Bell size={18} />
+            </NoticeIcon>
+            <NoticeText>22:00 ~ 07:00 사이에는 API 서버가 문을 닫습니다. (실무포트폴리오는 열람가능)</NoticeText>
+          </ServiceNotice>
 
           <SectionsContainer>
             {portfolioSections.map((section, index) => (
