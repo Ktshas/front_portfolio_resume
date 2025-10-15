@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Building2, Code, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
 const ExperienceSection = styled.section`
-  padding: 8rem 0 6rem 0;
+  padding: 6rem 0 6rem 0;
   background: ${props => props.theme.colors.background};
   position: relative;
   min-height: 100vh;
@@ -155,32 +155,6 @@ const ImprovementDescription = styled.p`
   font-size: 1rem;
 `;
 
-const TechnicalDetails = styled.div`
-  background: ${props => props.theme.colors.background};
-  border: 1px solid ${props => props.theme.colors.border};
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  margin-top: 1rem;
-`;
-
-const TechnicalTitle = styled.h5`
-  font-size: 1rem;
-  font-weight: 600;
-  color: ${props => props.theme.colors.text};
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-const TechnicalDescription = styled.p`
-  color: ${props => props.theme.colors.textSecondary};
-  line-height: 1.6;
-  margin: 0;
-  font-size: 0.95rem;
-  text-align: left;
-`;
-
 const ExperienceCase: React.FC = () => {
   return (
     <ExperienceSection id="experience-detail">
@@ -188,7 +162,6 @@ const ExperienceCase: React.FC = () => {
         <SectionTitle
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
           경력기술서
