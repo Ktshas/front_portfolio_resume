@@ -705,7 +705,10 @@ const About: React.FC = () => {
                   경력기술서 페이지
                 </PortfolioTitle>
                 <ExperienceButton
-                  onClick={() => navigate('/experience')}
+                  onClick={() => {
+                    navigate('/experience');
+                    window.scrollTo(0, 0);
+                  }}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 1.5 }}

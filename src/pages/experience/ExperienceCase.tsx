@@ -170,7 +170,7 @@ const ExperienceCase: React.FC = () => {
         <SectionSubtitle
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6}}
           viewport={{ once: true }}
         >
           실무에서 겪은 의미있는 문제 해결 과정과, 성공/실패 사례를 상세하게 소개합니다.
@@ -179,7 +179,7 @@ const ExperienceCase: React.FC = () => {
         <CaseStudyCard
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
           <CompanyHeader>
@@ -298,7 +298,7 @@ const ExperienceCase: React.FC = () => {
         <CaseStudyCard
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
           <CompanyHeader>
@@ -356,7 +356,7 @@ const ExperienceCase: React.FC = () => {
         <CaseStudyCard
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
           <CompanyHeader>
