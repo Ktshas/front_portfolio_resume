@@ -217,21 +217,6 @@ const Experience: React.FC = () => {
     {
       id: 3,
       title: '풀스택 개발자',
-      company: '어메스',
-      period: '2023.07 - 2023.10',
-      location: 'Seoul, Korea',
-      description: '부품정보 크롤러 및 OCR 파이프라인 개발을 담당했습니다.',
-      achievements: [
-        'BMW·Volvo·Audi 대상 부품정보 크롤러 개발',
-        '처리속도 8시간 → 10분으로 대폭 개선',
-        'OCR 이미지 보정 파이프라인 구축',
-        'Atlas MongoDB 전환으로 타임아웃 이슈 해소'
-      ],
-      side: 'left' as const
-    },
-    {
-      id: 4,
-      title: '풀스택 개발자',
       company: '가온미디어',
       period: '2022.01 - 2023.07',
       location: 'Seoul, Korea',
@@ -244,7 +229,7 @@ const Experience: React.FC = () => {
       side: 'right' as const
     },
     {
-      id: 5,
+      id: 4,
       title: '풀스택 개발자',
       company: '리걸테크',
       period: '2019.11 - 2022.01',
@@ -259,7 +244,7 @@ const Experience: React.FC = () => {
       side: 'left' as const
     },
     {
-      id: 6,
+      id: 5,
       title: 'SE/PL',
       company: 'グローテック(그로우테크)',
       period: '2017.09 - 2019.09',
@@ -274,7 +259,7 @@ const Experience: React.FC = () => {
       side: 'right' as const
     },
     {
-      id: 7,
+      id: 6,
       title: '개발자',
       company: 'メイテック(메이테크)',
       period: '2014.11 - 2017.08',
@@ -289,7 +274,7 @@ const Experience: React.FC = () => {
       side: 'left' as const
     },
     {
-      id: 8,
+      id: 7,
       title: '개발자',
       company: 'ユーテック(유테크)',
       period: '2012.05 - 2014.08',
